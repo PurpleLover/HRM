@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{47285FC7-3A39-41DB-A30C-BBB386F37636}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QLNS.Service</RootNamespace>
+    <AssemblyName>QLNS.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.Extended.6.1.0.168\lib\net45\EntityFramework.Extended.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppUserService\AppUserService.cs" />
+    <Compile Include="AppUserService\Dto\AppUserSearchDto.cs" />
+    <Compile Include="AppUserService\IAppUserService.cs" />
+    <Compile Include="CommonConfigurationService\CommonConfigurationService.cs" />
+    <Compile Include="CommonConfigurationService\DTO\CommonConfigurationDTO.cs" />
+    <Compile Include="CommonConfigurationService\DTO\CommonConfigurationSearchDTO.cs" />
+    <Compile Include="CommonConfigurationService\ICommonConfigurationService.cs" />
+    <Compile Include="Common\Constant.cs" />
+    <Compile Include="Common\ConstantExtension.cs" />
+    <Compile Include="Common\EntityService.cs" />
+    <Compile Include="Common\IEntityService.cs" />
+    <Compile Include="Common\IService.cs" />
+    <Compile Include="Common\JsonResultBO.cs" />
+    <Compile Include="Common\PageListResultBO.cs" />
+    <Compile Include="Common\SearchBase.cs" />
+    <Compile Include="ConfigRecruitmentRequestService\ConfigRecruitmentRequestService.cs" />
+    <Compile Include="ConfigRecruitmentRequestService\IConfigRecruitmentRequestService.cs" />
+    <Compile Include="Constant\DanhMucConstant.cs" />
+    <Compile Include="Constant\DotTuyenDungTrangThaiConst.cs" />
+    <Compile Include="Constant\HoSoUngVienTrangThaiConst.cs" />
+    <Compile Include="Constant\LoaiTaiLieuUploadConstant.cs" />
+    <Compile Include="Constant\PermissionCodeConst.cs" />
+    <Compile Include="Constant\UserConst.cs" />
+    <Compile Include="Constant\YeuCauTuyenDungTrangThaiConst.cs" />
+    <Compile Include="DepartmentService\DepartmentService.cs" />
+    <Compile Include="DepartmentService\DTO\DepartmentDTO.cs" />
+    <Compile Include="DepartmentService\DTO\DepartmentSearchDTO.cs" />
+    <Compile Include="DepartmentService\IDepartmentService.cs" />
+    <Compile Include="DM_DulieuDanhmucService\DM_DulieuDanhmucService.cs" />
+    <Compile Include="DM_DulieuDanhmucService\DTO\DM_DulieuDanhmucDTO.cs" />
+    <Compile Include="DM_DulieuDanhmucService\DTO\DM_DulieuDanhmucSearchDTO.cs" />
+    <Compile Include="DM_DulieuDanhmucService\IDM_DulieuDanhmucService.cs" />
+    <Compile Include="DM_NhomDanhmucService\DM_NhomDanhmucService.cs" />
+    <Compile Include="DM_NhomDanhmucService\DTO\DM_NhomDanhmucDTO.cs" />
+    <Compile Include="DM_NhomDanhmucService\DTO\DM_NhomDanhmucSearchDTO.cs" />
+    <Compile Include="DM_NhomDanhmucService\IDM_NhomDanhmucService.cs" />
+    <Compile Include="ModuleService\DTO\ModuleDTO.cs" />
+    <Compile Include="ModuleService\DTO\ModuleMenuDTO.cs" />
+    <Compile Include="ModuleService\DTO\ModuleSearchDTO.cs" />
+    <Compile Include="ModuleService\IModuleService.cs" />
+    <Compile Include="ModuleService\ModuleService.cs" />
+    <Compile Include="OperationService\DTO\OperationDTO.cs" />
+    <Compile Include="OperationService\DTO\OperationSearchDTO.cs" />
+    <Compile Include="OperationService\IOperationService.cs" />
+    <Compile Include="OperationService\OperationService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecruitmentRequestService\DTO\RecruitmentRequestSearchDTO.cs" />
+    <Compile Include="RecruitmentRequestService\DTO\RecruitmentRequestDTO.cs" />
+    <Compile Include="RecruitmentRequestService\IRecruitmentRequestService.cs" />
+    <Compile Include="RecruitmentRequestService\RecruitmentRequestService.cs" />
+    <Compile Include="RecruitmentSkillDetailService\DTO\RecruitmentSkillDetailDTO.cs" />
+    <Compile Include="RecruitmentSkillDetailService\DTO\RecruitmentSkillDetailSearchDTO.cs" />
+    <Compile Include="RecruitmentSkillDetailService\IRecruitmentSkillDetailService.cs" />
+    <Compile Include="RecruitmentSkillDetailService\RecruitmentSkillDetailService.cs" />
+    <Compile Include="RecruitmentSkillService\DTO\RecruitmentSkillSearchDTO.cs" />
+    <Compile Include="RecruitmentSkillService\IRecruitmentSkillService.cs" />
+    <Compile Include="RecruitmentSkillService\DTO\RecruitmentSkillDTO.cs" />
+    <Compile Include="RecruitmentSkillService\RecruitmentSkillService.cs" />
+    <Compile Include="RoleOperationService\DTO\RoleOperationDTO.cs" />
+    <Compile Include="RoleOperationService\IRoleOperationService.cs" />
+    <Compile Include="RoleOperationService\RoleOperationService.cs" />
+    <Compile Include="RoleService\DTO\RoleDTO.cs" />
+    <Compile Include="RoleService\DTO\RoleSearchDTO.cs" />
+    <Compile Include="RoleService\IRoleService.cs" />
+    <Compile Include="RoleService\RoleService.cs" />
+    <Compile Include="TaiLieuDinhKemService\ITaiLieuDinhKemService.cs" />
+    <Compile Include="TaiLieuDinhKemService\TaiLieuDinhKemService.cs" />
+    <Compile Include="TD_CauHinhSangLocUngVienService\DTO\CauHinhSangLocUngVienDTO.cs" />
+    <Compile Include="TD_CauHinhSangLocUngVienService\TD_CauHinhSangLocUngVienService.cs" />
+    <Compile Include="TD_CauHinhSangLocUngVienService\ITD_CauHinhSangLocUngVienService.cs" />
+    <Compile Include="TD_DotTuyenDungService\DTO\DotTuyenDungDTO.cs" />
+    <Compile Include="TD_DotTuyenDungService\DTO\DotTuyenDungSearchDTO.cs" />
+    <Compile Include="TD_DotTuyenDungService\ITD_DotTuyenDungService.cs" />
+    <Compile Include="TD_DotTuyenDungService\TD_DotTuyenDungService.cs" />
+    <Compile Include="TD_HoSoUngVienService\DTO\HoSoUngVienDto.cs" />
+    <Compile Include="TD_HoSoUngVienService\DTO\HoSoUngVienSearchDTO.cs" />
+    <Compile Include="TD_HoSoUngVienService\ITD_HoSoUngVienService.cs" />
+    <Compile Include="TD_HoSoUngVienService\TD_HoSoUngVienService.cs" />
+    <Compile Include="TD_QuanLyMauTestService\DTO\QuanLyMauTestDTO.cs" />
+    <Compile Include="TD_QuanLyMauTestService\DTO\QuanLyMauTestSearchDTO.cs" />
+    <Compile Include="TD_QuanLyMauTestService\ITD_QuanLyMauTestService.cs" />
+    <Compile Include="TD_QuanLyMauTestService\TD_QuanLyMauTestService.cs" />
+    <Compile Include="UserRoleService\IUserRoleService.cs" />
+    <Compile Include="UserRoleService\UserRoleService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\PagedList.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TaiLieuDinhKemService\DTO\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonHelper\CommonHelper.csproj">
+      <Project>{68e8b2e8-ed8b-4a15-a2bf-2561023c210a}</Project>
+      <Name>CommonHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLNS.Model\QLNS.Model.csproj">
+      <Project>{afc9d48b-d6fa-41e6-84bc-a43713b5e8b7}</Project>
+      <Name>QLNS.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLNS.Repository\QLNS.Repository.csproj">
+      <Project>{afc7d5ec-1324-49d5-b1e6-7239dc54220b}</Project>
+      <Name>QLNS.Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

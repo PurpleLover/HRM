@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý dữ liệu danh mục";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý dữ liệu danh mục";
+}
+@using QLNS.Model.Entities;
+@using Newtonsoft.Json;
+@using QLNS.Service.Common;
+@using QLNS.Web.Areas.DmDulieuDanhmucArea.Models;
+@model IndexVM
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model.Data.ListItem));
+}
+
+<style>
+    .action-icon {
+        margin-right: 5px;
+    }
+
+    .toUpper {
+        text-transform: uppercase;
+    }
+</style>
+
+
+@section ActionBarRight{
+    <a href="#collapseDiv" class="btn btn-sm btn-primary" aria-controls="collapsePanel" data-toggle="collapse" role="button">
+        Tìm kiếm
+    </a>
+    <a href="javascript:void(0)" onclick="CreateAction('/DmDulieuDanhmucArea/DmDulieuDanhmuc/Create/@Model.GroupId')" class="btn btn-primary btn-sm">Thêm mới</a>
+}
+@Html.Partial("_SearchPartial")
+
+<div id="tbl-DM_DulieuDanhmuc" class="hntbl-cover">
+    <table class="hinet-table table table-striped table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th style="width:3%">#</th>
+                <th style="width:20%">Tên</th>
+                <th style="width:20%">Mã</th>
+                <th style="width:20%">Thứ tự hiển thị</th>
+                <th style="width:22%">Ghi chú</th>
+                <th style="width:10%">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        var lstData = eval(@lstData);
+        var moduleTableSelector="#tbl-DM_DulieuDanhmuc";
+        function pagefunction(){
+            var conf = [
+                {
+                    tdClass: "center",
+                    isSort: false,
+                    isCounter: true,
+                    nameModel: "",
+                    content: function (data) {
+                        return "<input type='checkbox'/>"
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'Name',
+                    content: function (data) {
+                        return data.Name
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'Code',
+                    content: function (data) {
+                        return data.Code
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'Priority',
+                    content: function (data) {
+                        return data.Priority
+                    }
+                },
+                {
+                    isSort: false,
+                    nameModel: 'Note',
+                    content: function (data) {
+                        return data.Note
+                    }
+                },
+                {
+                    isSort: false,
+                    nameModel: "",
+                    content: function (data) {
+                        var result = "<div class='btn-group' style='display:flex; justify-content:center;'>";
+                        result += "<a style='margin-right:5px;' class='btn btn-primary btn-sm' href='javascript:void(0)' onclick='EditAction(\"/DmDulieuDanhmucArea/DmDulieuDanhmuc/Edit/" + data.Id + "\")'   title = 'Chỉnh sửa'><i class='glyphicon glyphicon-edit action-icon'></i>Chỉnh sửa</a>";
+                        result += "<a class='btn btn-danger btn-sm' href='javascript:void(0)' onclick='onDelete(\"/DmDulieuDanhmucArea/DmDulieuDanhmuc/Delete/" + data.Id + "\")'  title = 'Xóa'><i class=' glyphicon glyphicon-remove action-icon'></i>Xoá</a>";
+                        result += "</div>";
+                        return result;
+                    }
+                },
+            ];
+
+
+            var getdatafunc=function(page,sortQuery,pageSize){
+                $.ajax({
+                    url: '/DmDulieuDanhmucArea/DmDulieuDanhmuc/GetData',
+                    type: 'post',
+                    cache: false,
+                    data: { "indexPage": page, "sortQuery": sortQuery, "pageSize": pageSize,"groupid":@Model.GroupId},
+                    success: function (data) {
+                        $(moduleTableSelector).hinetTable("data",{
+                            pageSize:pageSize!=-1?pageSize:data.Count,
+                            pageIndex:page,
+                            pagecount: data.TotalPage,
+                            recordCount: data.Count,
+                            listItem: data.ListItem,});
+                    },
+                    error: function (err) {
+                        CommonJS.alert(xhr.responseText);
+                    }
+                });
+
+            }
+
+            var tblData = $(moduleTableSelector).hinetTable("init",{
+                pageSizeList:{size:[20,50,100,-1],label:['20','50','100','Tất cả']},
+                pagecount: @Model.Data.TotalPage,
+                recordCount: @Model.Data.Count,
+                getData:getdatafunc,
+                listItem:lstData,
+                config:conf
+            });
+
+        }
+
+        function AfterSussessActionAjaxform(){
+            $(moduleTableSelector).hinetTable("reload");
+        }
+        function AjaxSearchSuccess(rs) {
+            $(moduleTableSelector).hinetTable("data", {
+                pageIndex: 1,
+                pagecount: rs.TotalPage,
+                recordCount: rs.Count,
+                listItem: rs.ListItem,
+            });
+        }
+        pagefunction();
+    </script>
+}

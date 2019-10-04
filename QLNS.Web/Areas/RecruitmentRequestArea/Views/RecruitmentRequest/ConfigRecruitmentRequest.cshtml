@@ -1,0 +1,177 @@
+﻿@using QLNS.Web.Areas.RecruitmentRequestArea.Models
+@model RecruitmentRequestViewModel.RecruitmentRequestDetailViewModel
+@using QLNS.Service.Constant;
+@using CommonHelper.String;
+@using QLNS.Model.Entities;
+@{
+    ViewBag.Title = Model.Entity.IsTemplate != true ? "Cấu hình nhu cầu tuyển dụng" : "Cấu hình biểu mẫu nhu cầu tuyển dụng";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = Model.Entity.IsTemplate != true ? "Quản lý nhu cầu tuyển dụng" : "Quản lý biểu mẫu nhu cầu tuyển dụng";
+    ViewBag.PageName = Model.Entity.IsTemplate != true ? "Cấu hình nhu cầu tuyển dụng" : "Cấu hình biểu mẫu nhu cầu tuyển dụng";
+}
+
+@section ActionBarRight{
+    @if (Model.Entity.IsTemplate == true)
+    {
+        <a href="@Url.Action("Index","TemplateRecruitmentRequest")" class="btn btn-primary btn-sm">
+            <i class="fa fa-list"></i>&nbsp;Danh sách
+        </a>
+    }
+    else
+    {
+        <a href="@Url.Action("Index")" class="btn btn-primary btn-sm">
+            <i class="fa fa-list"></i>&nbsp;Danh sách
+        </a>
+    }
+    <a href="@Url.Action("DetailRecruitmentRequest", new { id = Model.Entity.Id})" class="btn btn-primary btn-sm">
+        <i class="fa fa-cog"></i>&nbsp;Thông tin
+    </a>
+}
+
+<style type="text/css">
+    .list-group-item {
+        padding: 0
+    }
+</style>
+
+@using (Ajax.BeginForm("SaveConfigRecruitmentRequest", "RecruitmentRequest", new { Area = "RecruitmentRequestArea" },
+                                    new AjaxOptions()
+                                    {
+                                        HttpMethod = "POST",
+                                        OnFailure = "AjaxFormError",
+                                        OnSuccess = "AjaxFormSuccess",
+                                    }, new { }))
+{
+    <input type="hidden" value="@Model.Entity.Id" name="REQUEST_ID" />
+    foreach (var groupSkill in Model.GroupSkills)
+    {
+        int count = 0;
+        long index = groupSkill.Id;
+
+        <input type="hidden" value="@groupSkill.Id" name="GROUP_SKILL" />
+        <div id="accordion" class="accordion-style1 panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-@index">
+                            <i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                            &nbsp;@groupSkill.Title.ToUpper() - (@groupSkill.GroupSkillDetails.Count tiêu chí)
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse in" id="collapse-@index">
+                    <div class="panel-body">
+                        <div class="card">
+                            <div class="card-body" style="overflow:hidden">
+                                @foreach (var item in groupSkill.GroupSkillDetails)
+                                {
+                                    var configData = Model.ConfigsData.Where(x => x.GroupSkillId == groupSkill.Id && x.SkillId == item.Id).FirstOrDefault() ?? new ConfigRecruitmentRequest();
+
+                                    <input name="INPUT_SKILL_@groupSkill.Id" value="@item.Id" type="hidden" />
+
+                                    <div class="@(groupSkill.GroupSkillDetails.Count == 1 ? "col-sm-12" : "col-sm-6")">
+                                        <div class="widget-box">
+                                            <div class="widget-header widget-header-flat">
+                                                @if (item.DataType == DataTypeConstant.CATEGORY)
+                                                {
+                                                    bool isCheck = false;
+                                                    var configDataCategory = configData.CategoryData.ToListNumber<long>(',');
+                                                    if (item.GroupCategoryData.Count() == configDataCategory.Count())
+                                                    {
+                                                        isCheck = true;
+                                                    }
+                                                    <div class="checkbox">
+                                                        <h4 class="widget-title">
+                                                            <label>
+                                                                <input class="ace ace-checkbox-2 checkbox-all" type="checkbox" @(isCheck ? "checked": "") value="@item.Id">
+                                                                <span class="lbl">
+                                                                    <b style="color: #669FC7;font-size:18px">
+                                                                        &nbsp;@item.Name.ToUpper()
+                                                                    </b>
+                                                                </span>
+
+                                                            </label>
+                                                        </h4>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <h4 class="widget-title">
+                                                        <b>
+                                                            @item.Name.ToUpper()
+                                                        </b>
+                                                    </h4>
+                                                }
+                                            </div>
+
+                                            <div class="widget-body">
+                                                <div class="widget-main">
+                                                    <ul class="list-group">
+                                                        @if (item.DataType == DataTypeConstant.CATEGORY)
+                                                        {
+                                                            var configDataCategory = configData.CategoryData.ToListNumber<long>(',');
+                                                            foreach (var data in item.GroupCategoryData)
+                                                            {
+                                                                <li class="list-group-item">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input data-skill="@item.Id" value="@data.Id" name="CHECKBOX_@item.Id" class="ace ace-checkbox-2" type="checkbox" @(configDataCategory.Contains(data.Id) ? "checked" : "")>
+                                                                            <span class="lbl">&nbsp;@data.Name</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        else if (item.DataType == DataTypeConstant.NUMBER)
+                                                        {
+                                                            <li class="list-group-item">
+                                                                <input name="NUMBER_@item.Id" type="text" value="@configData.AbsoluteNumber" class="form-control" placeholder="@item.Name" />
+                                                            </li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li class="list-group-item">
+                                                                <textarea name="TEXT_@item.Id" class="form-control" placeholder="@item.Name">@configData.TextValue</textarea>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    if ((count + 1) % 2 == 0)
+                                    {
+                                        <div class="clear"></div>
+                                    }
+                                    count++;
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <center>
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-save"></i>&nbsp;Lưu cấu hình
+        </button>
+    </center>
+}
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.checkbox-all').on('change', function () {
+                var isChecked = $(this).is(":checked");
+                var value = $(this).val();
+                $('input[type=checkbox][data-skill=' + value + ']').prop('checked', isChecked);
+            });
+        });
+
+        function AfterSussessActionAjaxform() {
+            //do nothing
+        }
+    </script>
+}

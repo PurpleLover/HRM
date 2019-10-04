@@ -1,0 +1,153 @@
+﻿.red {
+    color: red;
+}
+
+.navbar-right {
+    margin-right: 0px;
+}
+
+.action-right-bar {
+    position: relative;
+    float: right;
+}
+
+/*override style input*/
+
+input[type=email], input[type=url], input[type=search], input[type=tel], input[type=color], input[type=text], input[type=password], input[type=datetime], input[type=datetime-local], input[type=date], input[type=month], input[type=time], input[type=week], input[type=number], textarea {
+    border-radius: 5px !important;
+    border-color: #d2dae2;
+    font-size: 13px !important;
+    color: #2c3e50;
+}
+
+.width100 {
+    width: 100% !important;
+}
+
+select.form-control {
+    border-radius: 5px !important;
+    border-color: #d2dae2;
+    font-size: 13px !important;
+}
+
+.form-control {
+    height: 30px;
+}
+
+label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #34495e;
+}
+
+/*style modal*/
+h4.modal-title {
+    font-size: 20px;
+    text-transform: uppercase;
+}
+
+.modal-content {
+    border-radius: 12px;
+}
+
+.modal-header {
+    background: #2980b9;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border: none;
+}
+
+.modal-footer {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.SearchBox {
+    background-color: white;
+    margin-bottom: 3px;
+    padding: 5px;
+}
+
+h4.headerForm {
+    font-size: 15px;
+    font-weight: bold;
+    color: #003479;
+    text-transform: uppercase;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #ccc;
+    padding-top: 5px;
+}
+
+.nomargin {
+    margin: 0px !important;
+}
+
+.margin10 {
+    margin: 10px;
+}
+
+/*style chosen*/
+
+.chosen-container > .chosen-single, [class*=chosen-container] > .chosen-single {
+    border-radius: 5px;
+}
+
+.chosen-container, .chosen-container + .help-inline, [class*=chosen-container] {
+    width: 100% !important;
+}
+
+/*Style table upload*/
+table.table-upload tr th {
+    color: #2980b9;
+    font-size: 13px;
+    background: #f5f6fa;
+}
+
+table.table-upload tbody tr td {
+    font-size: 12px;
+    border: 1px solid #dfe6e9;
+}
+
+input[type=file] {
+    display: block;
+    font-size: 12px;
+    border-radius: 5px !important;
+}
+
+.width50 {
+    width: 50px;
+}
+
+.nav-list > li > a {
+    height: auto;
+}
+
+.nav-list > li:before {
+    height: auto;
+}
+
+.table-info {
+    margin-left: 20px;
+}
+
+    .table-info td {
+        padding: 7px 5px;
+    }
+
+        .table-info td:first-child {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+.resize-vertical {
+    resize: vertical;
+}
+.statusUngVien {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    text-align: right;
+}

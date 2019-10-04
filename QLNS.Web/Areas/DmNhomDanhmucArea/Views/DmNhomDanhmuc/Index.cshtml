@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý nhóm danh mục";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý danh mục";
+    ViewBag.PageName = "Danh sách nhóm danh mục";
+}
+@using QLNS.Model.Entities;
+@using Newtonsoft.Json;
+@using QLNS.Service.Common;
+@using QLNS.Service.DM_NhomDanhmucService.DTO;
+@model PageListResultBO<DM_NhomDanhmucDTO>
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model.ListItem));
+}
+
+<style>
+    .action-icon {
+        margin-right:5px;
+    }
+    .toUpper {
+        text-transform: uppercase;
+    }
+</style>
+
+
+@section ActionBarRight{
+    <a href="#collapseDiv" class="btn btn-sm btn-primary" aria-controls="collapsePanel" data-toggle="collapse" role="button">
+        Tìm kiếm
+    </a>
+    <a href="javascript:void(0)" onclick="CreateAction('/DmNhomDanhmucArea/DmNhomDanhmuc/Create')" class="btn btn-primary btn-sm">Thêm mới</a>
+}
+@Html.Partial("_SearchPartial")
+
+<div id="tbl-DM_NhomDanhmuc" class="hntbl-cover">
+    <table class="hinet-table table table-striped table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th style="width:5%">#</th>
+                <th style="width:37%">Tên nhóm</th>
+                <th style="width:37%">Mã nhóm</th>
+                <th style="width:21%">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        var lstData = eval(@lstData);
+        var moduleTableSelector="#tbl-DM_NhomDanhmuc";
+        function pagefunction(){
+            var conf = [
+                {
+                    tdClass: "center",
+                    isSort: false,
+                    isCounter: true,
+                    nameModel: "",
+                    content: function (data) {
+                        return "<input type='checkbox'/>"
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'GroupName',
+                    content: function (data) {
+                        return data.GroupName
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'GroupCode',
+                    content: function (data) {
+                        return data.GroupCode
+                    }
+                },
+                {
+                    isSort: false,
+                    nameModel: "",
+                    content: function (data) {
+                        var result = "<div class='btn-group' style='display:flex; justify-content:center;'>";
+                        result += '<a style="margin-right:5px;" class="btn btn-primary btn-sm" href="/DmDulieuDanhmucArea/DmDulieuDanhmuc/Index/' + data.Id + '\"" title="Cấu hình"><i class="glyphicon glyphicon-cog action-icon"> </i>Cấu hình</a> ';
+                        result += "<a style='margin-right:5px;' class='btn btn-primary btn-sm' href='javascript:void(0)' onclick='EditAction(\"/DmNhomDanhmucArea/DmNhomDanhmuc/Edit/" + data.Id + "\")'   title = 'Chỉnh sửa'><i class='glyphicon glyphicon-edit action-icon'> </i>Chỉnh sửa</a> ";
+                        result += "<a style='margin-right:5px;' class='btn btn-danger btn-sm' href='javascript:void(0)' onclick='onDelete(\"/DmNhomDanhmucArea/DmNhomDanhmuc/Delete/" + data.Id + "\")'  title = 'Xóa'><i class=' glyphicon glyphicon-remove action-icon'> </i>Xoá</a>";
+                        result += "</div>";
+                        return result;
+                    }
+                },
+            ];
+
+
+            var getdatafunc=function(page,sortQuery,pageSize){
+                $.ajax({
+                    url: '/DmNhomDanhmucArea/DmNhomDanhmuc/GetData',
+                    type: 'post',
+                    cache: false,
+                    data:{"indexPage":page,"sortQuery":sortQuery,"pageSize":pageSize},
+                    success: function (data) {
+                        $(moduleTableSelector).hinetTable("data",{
+                            pageSize:pageSize!=-1?pageSize:data.Count,
+                            pageIndex:page,
+                            pagecount: data.TotalPage,
+                            recordCount: data.Count,
+                            listItem: data.ListItem,});
+                    },
+                    error: function (err) {
+                        CommonJS.alert(xhr.responseText);
+                    }
+                });
+
+            }
+
+            var tblData=$("#tbl-DM_NhomDanhmuc").hinetTable("init",{
+                pageSizeList:{size:[20,50,100,-1],label:['20','50','100','Tất cả']},
+                pagecount: @Model.TotalPage,
+                recordCount: @Model.Count,
+                getData:getdatafunc,
+                listItem:lstData,
+                config:conf
+            });
+
+        }
+
+        function AfterSussessActionAjaxform(){
+            $(moduleTableSelector).hinetTable("reload");
+        }
+        function AjaxSearchSuccess(rs) {
+            $(moduleTableSelector).hinetTable("data", {
+                pageIndex: 1,
+                pagecount: rs.TotalPage,
+                recordCount: rs.Count,
+                listItem: rs.ListItem,
+            });
+        }
+        pagefunction();
+    </script>
+}

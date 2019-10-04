@@ -1,0 +1,60 @@
+﻿@model QLNS.Web.Areas.OperationArea.Models.AddMenuViewModel
+@using (Ajax.BeginForm("SaveAddMenu", "Operation", new { @area = "OperationArea" }, new AjaxOptions()
+{
+    HttpMethod = "POST",
+    OnFailure = "AjaxFormError",
+    OnSuccess = "AjaxFormSuccess",
+}, new { id = "form--edit-AddMenu" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.HiddenFor(x => x.EditViewModel.Id)
+        <div class="form-group">
+            <label class="control-label ">Tên thao tác <span class="red">*</span></label>
+            <div class="col-sm-12">
+                @Html.TextBoxFor(m => m.EditViewModel.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.EditViewModel.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label ">Mã thao tác <span class="red">*</span></label>
+            <div class="col-sm-12">
+                @Html.DropDownListFor(m => m.EditViewModel.Code, Model.ListPermissionCode, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.EditViewModel.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label ">Module <span class="red">*</span></label>
+            <div class="col-sm-12">
+                @Html.DropDownListFor(m => m.EditViewModel.ModuleId, Model.ListModule, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.EditViewModel.Code, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label ">Đường dẫn<span class="red">*</span></label>
+            <div class="col-sm-12">
+                @Html.TextAreaFor(m => m.EditViewModel.URL, new { @class = "form-control resize-vertical" })
+                @Html.ValidationMessageFor(m => m.EditViewModel.URL, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label ">Trạng thái hiển thị</label>
+            <div class="col-sm-12">
+                <div class="checkbox">
+                    <label>
+                        <input name="IsShow" type="checkbox" class="ace" value="True" checked />
+                        <span class="lbl"> <strong>Hiển thị</strong> </span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-sm">
+                Lưu lại
+            </button>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jqueryval")

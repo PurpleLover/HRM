@@ -1,0 +1,98 @@
+﻿@using QLNS.Web.Areas.TdCauHinhSangLocUngVienArea.Models;
+@using QLNS.Model.Common;
+
+@model EditVM
+@{
+    var DropdownType = ViewBag.DropdownType as List<SelectListItem>;
+    DropdownType.Add(new SelectListItem() { Text = "--Chọn loại--", Value = "", Selected = false });
+    var DropdownTemplate = ViewBag.DropdownTemplate as List<SelectListItem>;
+    DropdownTemplate.Add(new SelectListItem() { Text = "--Chọn mẫu--", Value = "", Selected = false });
+}
+<div class="modal-dialog">
+    @using (Ajax.BeginForm("Edit", "TdCauHinhSangLocUngVien", new { @area = "TdCauHinhSangLocUngVienArea" }, new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnFailure = "_AjaxFormError",
+        OnSuccess = "_AjaxFormSuccess",
+    }, new { id = "editForm" }))
+    {
+        @Html.AntiForgeryToken()
+        //HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="center">
+                    <h4 class="modal-title">Cập nhật phòng ban</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.Type)
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Loại </label>
+                        <div class="col-sm-8">
+                            @Html.TextBox("TypeName", ViewBag.TypeName as string, new { @class = "form-control", @disabled = true })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Tiêu đề <span class="red">*</span></label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @if (Model.Type.Equals(CandidateSelectionTypeConstant.Interview))
+                    {
+                        <div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Ngày phỏng vấn </label>
+                                <div class="col-sm-8">
+                                    @Html.DatePickerFor(m => m.InterviewDate, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Người phỏng vấn </label>
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(m => m.InterviewerName, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Biểu mẫu </label>
+                                <div class="col-sm-8">
+                                    @Html.DropDownListFor(m => m.TestId, DropdownTemplate, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">Điều kiện qua </label>
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(m => m.TestApprovedLimit, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Ghi chú </label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Note, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <button type="submit" class="btn btn-primary">Hoàn thành</button>
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    }
+</div>
+@Scripts.Render("~/bundles/jqueryval")

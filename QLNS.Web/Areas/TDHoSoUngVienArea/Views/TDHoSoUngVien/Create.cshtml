@@ -1,0 +1,392 @@
+﻿
+@{
+    ViewBag.Title = "Thêm mới hồ sơ ứng viên";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý hồ sơ ứng viên";
+    ViewBag.PageName = "Thêm mới hồ sơ ứng viên";
+
+}
+@using QLNS.Model.IdentityEntities
+@using Newtonsoft.Json
+@using QLNS.Service.TD_HoSoUngVienService.DTO
+@using QLNS.Service.Common
+@using QLNS.Web.Models
+@using QLNS.Service.Constant
+@using QLNS.Web.Areas.TDHoSoUngVienArea.Models
+@model CreateHoSoUngVienModel
+@{
+    var DotTuyenDungDropdownData = ViewBag.DotTuyenDung as List<SelectListItem>;
+
+    var DanTocDropdownData = ViewBag.DanTocDropdownData as List<SelectListItem>;
+    var TonGiaoDropdownData = ViewBag.TonGiaoDropdownData as List<SelectListItem>;
+    var QuocGiaDropdownData = ViewBag.QuocGiaDropdownData as List<SelectListItem>;
+    var KenhUngTuyenDropdownData = ViewBag.KenhUngTuyenDropdownData as List<SelectListItem>;
+    var XuatThanDropdownData = ViewBag.XuatThanDropdownData as List<SelectListItem>;
+    Model.NgayNopHoSo = DateTime.Now;
+    Model.NgaySinh = null;
+
+}
+<style>
+    table tr td {
+        padding: 5px 3px;
+    }
+</style>
+@if (TempData["MessageError"] != null)
+{
+    <div class="alert alert-block alert-success">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="ace-icon fa fa-times"></i>
+        </button>
+        <p>
+            <strong>
+                <i class="ace-icon fa fa-check"></i>
+                Có lỗi!
+            </strong>
+            @TempData["MessageError"]
+        </p>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+@using (Html.BeginForm("SaveCreate", "TDHoSoUngVien", new { area = "TDHoSoUngVienArea" }, FormMethod.Post, new { id = "CreateHoSoUngVienForm", @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <h4 class="headerForm">1.Thông tin cơ bản</h4>
+    <div class="row">
+        <div class="col-sm-10">
+            <table style="width:100%;">
+                <tbody>
+                    <tr>
+                        <td >
+                            <label for="IDDotTuyenDung">
+                                <b>Đợt tuyển dụng<span class="red">*</span></b>
+                            </label>
+                        </td>
+                        <td colspan="3">
+                            @Html.DropDownListFor(x => x.IDDotTuyenDung, DotTuyenDungDropdownData, new { @class = "form-control ", @onchange = "changeDotTuyenDung($(this))" })
+                            @Html.ValidationMessageFor(x => x.IDDotTuyenDung, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <label for="KenhUngTuyen">
+                                <b>Kênh ứng tuyển</b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => x.KenhUngTuyen, KenhUngTuyenDropdownData, new { @class = "form-control " })
+                            @Html.ValidationMessageFor(x => x.KenhUngTuyen, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="IdYeuCauTuyenDung">
+                                <b>Yêu cầu tuyển dụng<span class="red">*</span></b>
+                            </label>
+                        </td>
+                        <td colspan="3">
+                            @Html.DropDownListFor(x => x.IdYeuCauTuyenDung, new List<SelectListItem>() { new SelectListItem() { Text = "--Yêu cầu tuyển dụng--", Value = "" } }, new { @class = "form-control" })
+                        </td>
+
+                        <td>
+                            <label for="NgayNopHoSo">
+                                <b>Ngày nộp hồ sơ<span class="red">*</span></b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DatePickerFor(m => m.NgayNopHoSo, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                            @Html.ValidationMessageFor(m => m.NgayNopHoSo, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="HoTen">
+                                <b>Họ và tên<span class="red">*</span></b>
+                            </label>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.HoTen, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.HoTen, "", new { @class = "text-danger" })
+                            </div>
+
+                        </td>
+                        <td>
+                            <label for="GioiTinh">
+                                <b>
+                                    Giới tính
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="radio-inline" style="width:45%;float:left">
+                                <input type="radio" name="GioiTinh" value="Nam" checked autocomplete="off">Nam
+                            </label>
+                            <label class="radio-inline" style="width:45%;float:left">
+                                <input type="radio" name="GioiTinh" value="Nữ" autocomplete="off">Nữ
+                            </label>
+                        </td>
+                        <td>
+                            <label for="NgaySinh">
+                                <b>
+                                    Ngày sinh<span class="red">*</span>
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DatePickerFor(m => m.NgaySinh, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                            @Html.ValidationMessageFor(m => m.NgaySinh, "", new { @class = "text-danger" })
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="DienThoai">
+                                <b>
+                                    Số điện thoại<span class="red">*</span>
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.DienThoai, "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.DienThoai, "", new { @class = "text-danger" })
+
+                        </td>
+                        <td>
+                            <label for="Email">
+                                <b>Email<span class="red">*</span></b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.Email, "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+
+                        </td>
+                        <td>
+                            <label for="DiaChiHienTai">
+                                <b>
+                                    Nơi ở hiện nay
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.DiaChiHienTai, "", new { @class = "form-control" })
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="CMND">
+                                <b>
+                                    Số CMND<span class="red">*</span>
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.CMND, "", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.CMND, "", new { @class = "text-danger" })
+
+                        </td>
+                        <td>
+                            <label for="NgayCapCMND">
+                                <b>
+                                    Ngày cấp
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DatePickerFor(m => m.NgayCapCMND, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                            @Html.ValidationMessageFor(m => m.NgayCapCMND, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <label for="NoiCapCMND">
+                                <b>
+                                    Nơi cấp
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.NoiCapCMND, "", new { @class = "form-control" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="NoiSinh">
+                                <b>
+                                    Nơi sinh
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.NoiSinh, "", new { @class = "form-control" })
+
+                        </td>
+                        <td>
+                            <label for="DanToc">
+                                <b>
+                                    Dân tộc
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => x.DanToc, DanTocDropdownData, new { @class = "form-control " })
+                            @Html.ValidationMessageFor(x => x.DanToc, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <label for="TonGiao">
+                                <b>
+                                    Tôn giáo
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => x.TonGiao, TonGiaoDropdownData, new { @class = "form-control " })
+                            @Html.ValidationMessageFor(x => x.TonGiao, "", new { @class = "text-danger" })
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="QuocTich">
+                                <b>
+                                    Quốc gia:<span class="red">*</span>
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => x.QuocTich, QuocGiaDropdownData, new { @class = "form-control " })
+                            @Html.ValidationMessageFor(x => x.QuocTich, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            <label for="QueQuan">
+                                <b>
+                                    Quê quán:
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            <select name="QueQuan" id="QueQuan" class="form-control form-control">
+                                <option value="">---Chọn quê quán---</option>
+                            </select>
+
+                        </td>
+                        <td>
+                            <label for="DiaChiThuongTru">
+                                <b>
+                                    Địa chỉ thường trú:
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => m.DiaChiThuongTru, "", new { @class = "form-control" })
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="LYDO_UNGTUYEN">
+                                <b>
+                                    Lý do ứng tuyển
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => x.LyDoUngTuyen, "", new { @class = "form-control" })
+
+                        </td>
+                        <td>
+                            <label>
+                                <b>Người giới thiệu</b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => x.NguoiGioiThieu, "", new { @class = "form-control" })
+
+                        </td>
+                        <td>
+                            <label for="XuatThan">
+                                <b>
+                                    Xuất thân
+                                </b>
+                            </label>
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => x.XuatThan, XuatThanDropdownData, new { @class = "form-control " })
+                            @Html.ValidationMessageFor(x => x.XuatThan, "", new { @class = "text-danger" })
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2">
+            <div class="col-sm-12">
+                <img title="Lựa chọn ảnh đại diện" src="~/assets/images/avatars/uploadAvatar.png" id="avatar" width="100%" height="auto">
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="font-bold" for="ThuNhapGanNhat">Thu nhập gần nhất</label>
+                    </div>
+                    <div class="col-sm-12">
+                        @Html.TextBoxFor(x => x.ThuNhapGanNhat, "c", new { @class = "form-control", type = "number" })
+                    </div>
+
+                    <div class="col-sm-12">
+                        <label class="font-bold">Thu nhập mong muốn</label>
+                    </div>
+                    <div class="col-sm-12">
+                        @Html.TextBoxFor(x => x.ThuNhapMongMuon, "", new { @class = "form-control", type = "number" })
+                    </div>
+                    <div class="custom-height">
+                        <span class="error" id="THUNHAP_MONGMUON_ERROR">&nbsp;</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <h4 class="headerForm">2.Thông tin khác và tài liệu đính kèm</h4>
+    <div class="row">
+        <div class="col-sm-6">
+            <label>Tài liệu đính kèm</label>
+            <div>
+                @Html.Partial("_UploadTool", new UploadToolModel() { IsModify = true, LoaiTaiLieu = LoaiTaiLieuUploadConstant.HoSoUngVien, })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <label>Ghi chú</label>
+            <div>
+                @Html.TextAreaFor(x => x.GhiChu, 3, 3, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="row text-center margin10">
+        <button type="submit" class="btn btn-md btn-success">
+            <i class="ace-icon fa fa-check"></i>
+            Lưu thông tin
+        </button>
+    </div>
+}
+@section ActionBarRight{
+
+
+}
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $('.chosen-select').chosen({ allow_single_deselect: true });
+
+        function changeDotTuyenDung(elem) {
+            var dotTuyenDungId = parseInt(elem.val());
+            AjaxCall('/dottuyendungArea/dottuyendung/GetDsYeuCauOfDot/' + dotTuyenDungId, 'post', null, function (rs) {
+                var stringResult = "";
+                for (let item of rs) {
+                    stringResult += '<option value="' + item.Value + '">' + item.Text + '</option>';
+                }
+                $("#IdYeuCauTuyenDung").html(stringResult);
+            });
+        }
+    </script>
+}

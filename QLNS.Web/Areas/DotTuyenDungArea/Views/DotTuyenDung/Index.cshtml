@@ -1,0 +1,182 @@
+﻿@{
+
+    ViewBag.Title = "Quản lý đợt tuyển dụng";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý Đợt tuyển dụng";
+    ViewBag.PageName = "Danh sách đợt tuyển dụng";
+    ViewBag.ModuleCode = QLNS.PermissionCodeConst.DotTuyenDung;
+
+}
+@using QLNS.Model.IdentityEntities
+@using Newtonsoft.Json
+@using QLNS.Service.TD_DotTuyenDungService.DTO
+@using QLNS.Service.Common
+@model PageListResultBO<DotTuyenDungDTO>
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model.ListItem));
+}
+
+@section ActionBarRight{
+    <a href="#collapseDiv" class="btn btn-sm btn-primary" aria-controls="collapsePanel" data-toggle="collapse" role="button">
+        Tìm kiếm
+    </a>
+    <a href="/dottuyendungarea/dottuyendung/Create" class="btn btn-primary btn-sm">Thêm mới</a>
+}
+@if (TempData["MessageSuccess"] != null)
+{
+    <div class="alert alert-block alert-success">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="ace-icon fa fa-times"></i>
+        </button>
+        <p>
+            <strong>
+                <i class="ace-icon fa fa-check"></i>
+                Chúc mừng!
+            </strong>
+            @TempData["MessageSuccess"]
+        </p>
+    </div>
+}
+@Html.Partial("_SearchPartial")
+
+<div id="tbl-dottuyendung" class="hntbl-cover">
+    <table class="hinet-table table table-striped table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên đợt tuyển dụng</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+                <th>Trạng thái</th>
+                <th>Ghi chú</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        var lstData = eval(@lstData);
+        var moduleTableSelector ="#tbl-dottuyendung";
+        function pagefunction() {
+                $(".txt-picker").datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true, yearRange: "-50:+20",
+                    showWeek: false, weekHeader: "Tuần",
+                    language: 'vi',
+                    prevText: '<i class="fa fa-chevron-left"></i>',
+                    nextText: '<i class="fa fa-chevron-right"></i>',
+                    onSelect: function (date) {
+
+                    }
+                });
+            var conf=[
+                {
+                    tdClass:"center",
+                    isSort:false,
+                    nameModel: "",
+                    isCounter:true,
+                    content: function (data) {
+                        return "<input type='checkbox'/>"
+                    }
+                },
+                {
+                    isSort:true,
+                    nameModel:'TenDot',
+                    content: function (data) {
+                        return "<a href='/dottuyendungArea/dottuyendung/detail/" + data.Id + "'>" + data.TenDot + "</a>";
+                    }
+                },
+                 {
+                     isSort:true,
+                     nameModel:'NgayBatDau',
+                     content: function (data) {
+                         return ToDate(data.NgayBatDau)
+                     }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'NgayKetThuc',
+                    content: function (data) {
+                        return ToDate(data.NgayKetThuc)
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'TrangThai',
+                    content: function (data) {
+                        return data.TenTrangThai
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'GhiChu',
+                    content: function (data) {
+                        return data.GhiChu
+                    }
+                },
+                   {
+                       isSort:false,
+                       nameModel:"",
+                       tdClass:"center",
+                       content: function (data) {
+                           var result = "<div class='btn-group'>";
+                           result += "<a href='/dottuyendungarea/dottuyendung/Edit/" + data.Id +"'   title = 'Chỉnh sửa'><i class='glyphicon glyphicon-edit'> </i></a> ";
+                           result += "<a href='javascript:void(0)' onclick='DeleteAction(\"/dottuyendungarea/dottuyendung/Delete/" + data.Id + "\")'  title = 'Xóa'><i class=' glyphicon glyphicon-remove' style='color:red'> </i></a>";
+                           result += "</div>";
+                           return result;
+                       }
+                   },
+
+            ];
+
+
+            var getdatafunc=function(page,sortQuery,pageSize){
+                $.ajax({
+                    url: '/dottuyendungarea/dottuyendung/getData',
+                    type: 'post',
+                    cache: false,
+                    data:{"indexPage":page,"sortQuery":sortQuery,"pageSize":pageSize},
+                    success: function (data) {
+                        $(moduleTableSelector).hinetTable("data",{
+                            pageSize:pageSize!=-1?pageSize:data.Count,
+                            pageIndex:page,
+                            pagecount: data.TotalPage,
+                            recordCount: data.Count,
+                            listItem: data.ListItem,});
+                    },
+                    error: function (err) {
+                        CommonJS.alert(xhr.responseText);
+                    }
+                });
+
+            }
+
+            var tblData = $(moduleTableSelector).hinetTable("init",{
+                pageSizeList:{size:[20,50,100,-1],label:['20','50','100','Tất cả']},
+                pagecount: @Model.TotalPage,
+                recordCount: @Model.Count,
+                getData:getdatafunc,
+                listItem:lstData,
+                config:conf
+            });
+
+        }
+
+        function AfterSussessActionAjaxform(){
+            $(moduleTableSelector).hinetTable("reload");
+        }
+        function AjaxSearchSuccess(rs) {
+            $(moduleTableSelector).hinetTable("data", {
+                pageIndex: 1,
+                pagecount: rs.TotalPage,
+                recordCount: rs.Count,
+                listItem: rs.ListItem,
+            });
+        }
+        pagefunction();
+    </script>
+}

@@ -1,0 +1,93 @@
+﻿@using QLNS.Web.Areas.RecruitmentSkillDetailArea.Models;
+@model RecruitmentSkillDetailViewModel.RecruitmentSkillDetailEditViewModel
+@{
+    var entity = Model.EditEntity;
+}
+<div class="modal-dialog">
+    @using (Ajax.BeginForm("Save", "RecruitmentSkillDetail", new { @area = "RecruitmentSkillDetailArea" }, new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnFailure = "AjaxFormError",
+        OnSuccess = "AjaxFormSuccess",
+    }, new { id = "form--edit-recruitment-skill-detail" }))
+    {
+        @Html.AntiForgeryToken()
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="center">
+                    <h4 class="modal-title">
+                        @(entity.Id > 0 ? "CẬp NHẬT KỸ NĂNG" : "THÊM MỚI KỸ NĂNG")
+                    </h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type='hidden' name='Id' value='@entity.Id' />
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Name">
+                            Tiêu đề <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" name="Name" class="form-control required" value="@entity.Name" />
+                            <div class="note-error">
+                                <span class="text-danger error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Order">
+                            Loại dữ liệu <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownList("DataType", Model.GroupDataType, "--- Chọn ---", new { @class = "form-control requiredDropDownList" })
+                            <div class="note-error">
+                                <span class="text-danger error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="block--data-config">
+                        @Html.Action("GetDataTypeConfig",new { id = Model.EditEntity.Id })
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <a href="javascript:void(0)" id="btn--save" class="btn btn-primary">
+                    Cập nhật
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#btn--save').on('click', function () {
+            onSubmit();
+        });
+
+        $('#DataType').on('change', function () {
+            var dataType = $('#DataType').val();
+            if (dataType != '') {
+                $.get('/RecruitmentSkillDetailArea/RecruitmentSkillDetail/GetDataTypeConfigByType?typeId=' + dataType, function (result) {
+                    $('#block--data-config').html(result);
+                })
+            } else {
+                $('#block--data-config').empty();
+            }
+        });
+    })
+
+    function onSubmit() {
+        var isCommonValid = validateForm('form--edit-recruitment-skill-detail');
+        if (isCommonValid) {
+            $('#form--edit-recruitment-skill-detail').submit();
+        } else {
+            return false;
+        }
+    }
+</script>

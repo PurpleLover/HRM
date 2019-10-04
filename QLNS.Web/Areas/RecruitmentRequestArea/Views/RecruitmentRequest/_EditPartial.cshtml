@@ -1,0 +1,147 @@
+﻿@using QLNS.Model.IdentityEntities
+@using QLNS.Web.Areas.RecruitmentRequestArea.Models;
+
+@model RecruitmentRequestViewModel.RecruitmentRequestEditViewModel
+
+<div class="modal-dialog">
+    @using (Ajax.BeginForm("Save", "RecruitmentRequest", new { @area = "RecruitmentRequestArea" }, new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnFailure = "AjaxFormError",
+        OnSuccess = "AjaxFormSuccess",
+    }, new { id = "form--edit-role" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="center">
+                    <h4 class="modal-title">
+                        @((Model.Id > 0) ? "CẬp NHẬT YÊU CẦU TUYỂN DỤNG" : "THÊM MỚI YÊU CẦU TUYỂN DỤNG")
+                    </h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type='hidden' name='Id' value='@Model.Id' />
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Name">
+                            Nhu cầu tuyển dụng <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Code">
+                            Phòng ban <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.DepartmentId, Model.GroupDepartments, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.DepartmentId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Code">
+                            Vị trí <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(x => x.PositionId, Model.GroupPositions, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.PositionId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Code">
+                            Số lượng <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.EstimateQuantity, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.EstimateQuantity, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Code">
+                            Hạn tuyển dụng <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.DatePickerFor(m => m.UntilDate, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                            @Html.ValidationMessageFor(m => m.UntilDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Nhóm kỹ năng/yêu cầu</label>
+                        <div class="col-sm-8">
+                            <div class="radio">
+                                <label>
+                                    <input @(Model.IsChooseFromTemplate != true ? "checked" : "") name="IsChooseFromTemplate" type="radio" class="ace" value="false" onchange="onChangeSkillData()"/>
+                                    <span class="lbl">
+                                        Tự chọn
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="radio">
+                                <label>
+                                    <input @(Model.IsChooseFromTemplate == true ? "checked" : "") name="IsChooseFromTemplate" type="radio" class="ace" value="true" onchange="onChangeSkillData()" />
+                                    <span class="lbl">
+                                        Chọn từ biểu mẫu
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="block--edit-skill">
+                        @Html.Action("GetSkillData",new { model = Model})
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Code">
+                            Ghi chú
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.TextAreaFor(m => m.Comment, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Comment, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <button type="submit" class="btn btn-primary">
+                    Cập nhật
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    }
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        $(".chosen-select").chosen({
+            width: "100%",
+            placeholder_text_multiple: 'Chọn nhóm kỹ năng, yêu cầu'
+        });
+    })
+
+    function onChangeSkillData() {
+        var value = $('input:radio[name=IsChooseFromTemplate]:checked').val();
+
+        $.get('@Url.Action("GetSkillDataOnChange")?isUsingTemplate=' + value, function (result) {
+            $('#block--edit-skill').html(result);
+            $(".chosen-select").chosen({
+                width: "100%",
+                placeholder_text_multiple: 'Chọn nhóm kỹ năng, yêu cầu'
+            });
+        })
+    }
+</script>

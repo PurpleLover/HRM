@@ -1,0 +1,201 @@
+﻿@using QLNS.Web.Areas.DotTuyenDungArea.Models
+@model DetailViewModel
+<style>
+    .ace-scroll, .scroll-content {
+    }
+</style>
+<div class="row nomargin">
+
+    @foreach (var item in Model.listYeuCauTuyenDungDot)
+    {
+        var lsUngVien = Model.dsUngVien.Where(x => x.IdYeuCauTuyenDung == item.Id).ToList();
+        <div class="widget-box transparent col-sm-6">
+            <div class="widget-header widget-header-small">
+                <h4 class="widget-title blue smaller">
+                    <i class="ace-icon fa fa-rss orange"></i>
+                    <b>@item.Title</b>
+                    <span class="badge badge-danger">@lsUngVien.Count()</span>
+                </h4>
+
+
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-8">
+
+                    <div class="profile-feed">
+                        @foreach (var hs in lsUngVien)
+                        {
+                        <div class="profile-activity clearfix">
+                            <div>
+                                @if (!string.IsNullOrEmpty(hs.Avatar))
+                                {
+                                    <img class="pull-left" alt="@hs.HoTen" src="@hs.Avatar" onerror="this.src ='~/assets/images/avatars/avatar2.png'" />
+                                }
+                                else
+                                {
+                                    <img class="pull-left" alt="@hs.HoTen" src="~/assets/images/avatars/avatar2.png" />
+
+                                }
+
+                                <a class="user" href="#"> @hs.HoTen </a>(@hs.GioiTinh - @string.Format("{0:dd/MM/yyyy}", hs.NgaySinh))
+
+                                <div class="time">
+                                    <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                    @hs.NgayNopHoSo.ToString("dd/MM/yyyy")
+                                </div>
+                                <div class="statusUngVien">
+                                    <strong>@hs.TenTrangThai</strong>
+                                </div>
+                            </div>
+
+                            <div class="tools action-buttons">
+                                <a href="#" class="blue">
+                                    <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                </a>
+
+                                <a href="#" class="red">
+                                    <i class="ace-icon fa fa-times bigger-125"></i>
+                                </a>
+                            </div>
+                            <div style="margin-top:5px;">
+                                <a href="#"><span class="label label-lg label-primary arrowed-right">Phỏng vấn</span></a>
+                                <a href="#"><span class="label label-lg label-default arrowed-right">Test</span></a>
+                                <span class="btn btn-info btn-sm popover-info" data-rel="popover" data-placement="top" title="Some Info" data-content="Heads up! This alert needs your attention, but it's not super important.">Bottom</span>
+                            </div>
+                            
+                        </div>
+                        }
+                        <div class="profile-activity clearfix">
+                            <div>
+                                <img class="pull-left" alt="Alex Doe's avatar" src="/assets/images/avatars/avatar5.png">
+                                <a class="user" href="#"> Alex Doe </a>
+                                changed his profile photo.
+                                <a href="#">Take a look</a>
+
+                                <div class="time">
+                                    <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                    an hour ago
+                                </div>
+                            </div>
+
+                            <div class="tools action-buttons">
+                                <a href="#" class="blue">
+                                    <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                </a>
+
+                                <a href="#" class="red">
+                                    <i class="ace-icon fa fa-times bigger-125"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="profile-activity clearfix">
+                            <div>
+                                <img class="pull-left" alt="Alex Doe's avatar" src="/assets/images/avatars/avatar5.png">
+                                <a class="user" href="#"> Alex Doe </a>
+                                changed his profile photo.
+                                <a href="#">Take a look</a>
+
+                                <div class="time">
+                                    <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                    an hour ago
+                                </div>
+                            </div>
+
+                            <div class="tools action-buttons">
+                                <a href="#" class="blue">
+                                    <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                </a>
+
+                                <a href="#" class="red">
+                                    <i class="ace-icon fa fa-times bigger-125"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="profile-activity clearfix">
+                            <div>
+                                <img class="pull-left" alt="Alex Doe's avatar" src="/assets/images/avatars/avatar5.png">
+                                <a class="user" href="#"> Alex Doe </a>
+                                changed his profile photo.
+                                <a href="#">Take a look</a>
+
+                                <div class="time">
+                                    <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                    an hour ago
+                                </div>
+                            </div>
+
+                            <div class="tools action-buttons">
+                                <a href="#" class="blue">
+                                    <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                </a>
+
+                                <a href="#" class="red">
+                                    <i class="ace-icon fa fa-times bigger-125"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="profile-activity clearfix">
+                            <div>
+                                <img class="pull-left" alt="Alex Doe's avatar" src="/assets/images/avatars/avatar5.png">
+                                <a class="user" href="#"> Alex Doe </a>
+                                changed his profile photo.
+                                <a href="#">Take a look</a>
+
+                                <div class="time">
+                                    <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                    an hour ago
+                                </div>
+                            </div>
+
+                            <div class="tools action-buttons">
+                                <a href="#" class="blue">
+                                    <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                </a>
+
+                                <a href="#" class="red">
+                                    <i class="ace-icon fa fa-times bigger-125"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="profile-activity clearfix">
+                            <div>
+                                <img class="pull-left" alt="Alex Doe's avatar" src="/assets/images/avatars/avatar5.png">
+                                <a class="user" href="#"> Alex Doe </a>
+                                changed his profile photo.
+                                <a href="#">Take a look</a>
+
+                                <div class="time">
+                                    <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                    an hour ago
+                                </div>
+                            </div>
+
+                            <div class="tools action-buttons">
+                                <a href="#" class="blue">
+                                    <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                </a>
+
+                                <a href="#" class="red">
+                                    <i class="ace-icon fa fa-times bigger-125"></i>
+                                </a>
+                            </div>
+                        </div>
+                        @if (lsUngVien == null || !lsUngVien.Any())
+                        {
+                            <div class="alert alert-warning">
+                                <button type="button" class="close" data-dismiss="alert">
+                                    <i class="ace-icon fa fa-times"></i>
+                                </button>
+                                <strong>Thông báo!</strong>
+                                Chưa có ứng viên
+                                <br>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>

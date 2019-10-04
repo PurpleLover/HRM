@@ -1,0 +1,84 @@
+﻿@using QLNS.Web.Core
+@using QLNS.Service.ModuleService.DTO
+@{
+    var listMenu = SessionManager.GetListPermistion() as List<ModuleMenuDTO>;
+
+}
+<ul class="nav nav-list">
+    <li class="@(ViewBag.ModuleCode==null?"active":"")">
+        <a href="/DashboardArea/Dashboard">
+            <i class="menu-icon fa fa-tachometer"></i>
+            <span class="menu-text"> Dashboard </span>
+        </a>
+
+        <b class="arrow"></b>
+    </li>
+    @if (listMenu != null && listMenu.Any())
+    {
+        foreach (var module in listMenu)
+        {
+            var isactive = module.ListOperation != null && module.ListOperation.Any(x => x.Code == ViewBag.ModuleCode) ? "active" : "";
+            var isOpen = isactive == "active" ? "open" : "";
+            if (module.IsShow)
+            {
+                if (module.ListOperation != null && module.ListOperation.Any(x => x.IsShow))
+                {
+                    <li class="@isactive @isOpen">
+                        <a href="#" class="dropdown-toggle" style="">
+                            <i class="menu-icon @(string.IsNullOrEmpty(module.ClassCss)?"fa fa-asterisk":module.ClassCss)"></i>
+                            <span class="menu-text">
+                                @module.Name
+                            </span>
+
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+
+                        <b class="arrow"></b>
+
+                        <ul class="submenu">
+                            @foreach (var operation in module.ListOperation.Where(x => x.IsShow).ToList())
+                            {
+                                <li class="@(operation.Code==ViewBag.ModuleCode?"active":"")">
+                                    <a href="@operation.URL">
+                                        <i class="menu-icon @operation.Css"></i>
+                                        @operation.Name
+
+                                    </a>
+                                    <b class="arrow"></b>
+                                </li>
+                            }
+
+                        </ul>
+                    </li>
+                }
+
+            }
+            else
+            {
+                if (module.ListOperation != null && module.ListOperation.Any(x => x.IsShow))
+                {
+                    foreach (var operation in module.ListOperation.Where(x => x.IsShow).ToList())
+                    {
+                        <li class="@isactive">
+                            <a href="@operation.URL">
+                                <i class="menu-icon @(string.IsNullOrEmpty(operation.Css)?"fa fa-asterisk":operation.Css)"></i>
+                                <span class="menu-text">
+                                    @operation.Name
+                                </span>
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                    }
+                }
+            }
+        }
+
+    }
+
+
+</ul><!-- /.nav-list -->
+
+<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+    <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+</div>

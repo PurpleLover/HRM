@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewBag.Title = "Cập nhật thông tin đợt tuyển dụng";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý đợt tuyển dụng";
+    ViewBag.PageName = "Cập nhật thông tin đợt tuyển dụng";
+
+}
+@using QLNS.Model.IdentityEntities
+@using Newtonsoft.Json
+@using QLNS.Service.TD_HoSoUngVienService.DTO
+@using QLNS.Service.Common
+@using QLNS.Web.Models
+@using QLNS.Service.Constant
+@using QLNS.Web.Areas.DotTuyenDungArea.Models
+@using QLNS.Service.RecruitmentRequestService.DTO;
+
+@using QLNS.Model.Entities
+
+@model EditDotTuyenDungModel
+@{
+    var listYeuCauTuyenDung = ViewBag.listYeuCauTuyenDung as List<RecruitmentRequestDTO>;
+    var listYeuCauTuyenDungDot = ViewBag.listYeuCauTuyenDungDot as List<RecruitmentRequestDTO>;
+    var tailieudinhkem = ViewBag.tailieudinhkem as List<TaiLieuDinhKem>;
+}
+<style>
+    table tr td {
+        padding: 5px 3px;
+    }
+</style>
+@if (TempData["MessageError"] != null)
+{
+    <div class="alert alert-block alert-success">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="ace-icon fa fa-times"></i>
+        </button>
+        <p>
+            <strong>
+                <i class="ace-icon fa fa-check"></i>
+                Có lỗi!
+            </strong>
+            @TempData["MessageError"]
+        </p>
+    </div>
+}
+@section ActionBarRight{
+
+    <a href="javascript:void(0)" onclick="history.back()" class="btn btn-primary btn-sm"><i class="fa fa-reply"></i> Quay lại</a>
+}
+@Scripts.Render("~/bundles/jquery")
+@using (Html.BeginForm("SaveEdit", "dottuyendung", new { area = "dottuyendungArea" }, FormMethod.Post, new { id = "EditDotTuyenDungForm", @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.TrangThai)
+    <div class="row">
+        <div class="col-sm-6">
+            <h4 class="headerForm">1.Thông tin cơ bản</h4>
+            <div class="row">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Tên đợt tuyển dụng<span class="red">*</span></label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(x => x.TenDot, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.TenDot, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Ngày bắt đầu</label>
+                        <div class="col-sm-8">
+                            @Html.DatePickerFor(x => x.NgayBatDau, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                            @Html.ValidationMessageFor(x => x.NgayBatDau, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Ngày bắt đầu</label>
+                        <div class="col-sm-8">
+                            @Html.DatePickerFor(x => x.NgayKetThuc, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                            @Html.ValidationMessageFor(x => x.NgayKetThuc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Ghi chú</label>
+                        <div class="col-sm-8">
+                            @Html.TextAreaFor(x => x.GhiChu, 4, 3, new { @class = "form-control resize-vertical" })
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <h4 class="headerForm">2. Yêu cầu tuyển dụng</h4>
+            <div>
+                @foreach (var item in listYeuCauTuyenDungDot)
+                {
+                    <div class="checkbox">
+                        <label>
+                            <input name="DsYeuCauTuyenDung" type="checkbox" checked class="ace" value="@item.Id" />
+                            <span class="lbl"> <strong style="color:#d35400;">@item.Title</strong> (@item.DepartmentId)</span>
+                        </label>
+                    </div>
+                }
+                @foreach (var item in listYeuCauTuyenDung)
+                {
+                    <div class="checkbox">
+                        <label>
+                            <input name="DsYeuCauTuyenDung" type="checkbox" class="ace" value="@item.Id" />
+                            <span class="lbl"> <strong style="color:#d35400;">@item.Title</strong> (@item.DepartmentId)</span>
+                        </label>
+                    </div>
+                }
+            </div>
+            <h4 class="headerForm">3. Tệp đính kèm</h4>
+            <div>
+                @Html.Partial("_UploadTool", new UploadToolModel() { IsModify = true, LoaiTaiLieu = LoaiTaiLieuUploadConstant.DotTuyenDung, LstTaiLieu = tailieudinhkem })
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row text-center margin10">
+        <button type="submit" class="btn btn-md btn-success">
+            <i class="ace-icon fa fa-check"></i>
+            Lưu thông tin
+        </button>
+    </div>
+}
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $('.chosen-select').chosen({ allow_single_deselect: true });
+    </script>
+}

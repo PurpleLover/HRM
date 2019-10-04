@@ -1,0 +1,286 @@
+﻿
+@{
+    ViewBag.Title = "Cập nhật hồ sơ ứng viên";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý hồ sơ ứng viên";
+    ViewBag.PageName = "Chi tiết hồ sơ ứng viên";
+
+}
+
+@using QLNS.Web.Models
+@using QLNS.Service.Constant
+@using QLNS.Web.Areas.TDHoSoUngVienArea.Models
+@model DetailModel
+<style>
+    #avatar {
+        width: 180px;
+        height: 200px;
+    }
+
+    .profile-info-name {
+        width: 130px
+    }
+</style>
+
+@section ActionBarRight{
+
+    <a href="javascript:void(0)" onclick="history.back()" class="btn btn-primary btn-sm"><i class="fa fa-reply"></i> Quay lại</a>
+}
+@if (TempData["MessageError"] != null)
+{
+    <div class="alert alert-block alert-success">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="ace-icon fa fa-times"></i>
+        </button>
+        <p>
+            <strong>
+                <i class="ace-icon fa fa-check"></i>
+                Có lỗi!
+            </strong>
+            @TempData["MessageError"]
+        </p>
+    </div>
+}
+
+<h4 class="headerForm">1.Thông tin cơ bản</h4>
+<div id="user-profile-1" class="user-profile row">
+    <div class="col-xs-12 col-sm-3 center">
+        <div>
+            <span class="profile-picture">
+                <img id="avatar" class="editable img-responsive" alt="Avatar" src="~/assets/images/avatars/profile-pic.jpg" />
+            </span>
+
+            <div class="space-4"></div>
+
+            <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                <div class="inline position-relative">
+                    <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                        <i class="ace-icon fa fa-circle light-green"></i>
+                        &nbsp;
+                        <span class="white">@Model.hoSoUngVien.HoTen</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-6"></div>
+
+        <div class="profile-contact-info">
+            <div class="profile-contact-links align-left">
+                <a href="#" class="btn btn-link">
+                    <i class="ace-icon fa fa-phone bigger-120 green"></i>
+                    @Model.hoSoUngVien.DienThoai
+                </a>
+                <br />
+                <a href="#" class="btn btn-link">
+                    <i class="ace-icon fa fa-envelope bigger-120 pink"></i>
+                    @Model.hoSoUngVien.Email
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-9">
+
+        <div class="profile-user-info profile-user-info-striped">
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Đợt tuyển dụng </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.IDDotTuyenDung</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Yêu cầu tuyển dụng </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.IdYeuCauTuyenDung</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Kênh tuyển dụng </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.KenhUngTuyen</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Ngày nộp hồ sơ  </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@string.Format("{0:dd/MM/yyyy}", Model.hoSoUngVien.NgayNopHoSo)</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Họ tên </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.HoTen</span>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Giới tính </div>
+
+                <div class="profile-info-value">
+                    
+                    <span class="editable">@Model.hoSoUngVien.GioiTinh</span>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Ngày sinh </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@string.Format("{0:dd/MM/yyyy}", Model.hoSoUngVien.NgaySinh)</span>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Điện thoại </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.DienThoai</span>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Email </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.Email</span>
+                </div>
+            </div>
+
+            <div class="profile-info-row">
+                <div class="profile-info-name"> CMND </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.CMND</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Ngày cấp CMND </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@string.Format("{0:dd/MM/yyyy}", Model.hoSoUngVien.NgayCapCMND)</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Nơi cấp CMND </div>
+
+                <div class="profile-info-value">
+                    <i class="fa fa-map-marker light-orange bigger-110"></i>
+                    <span class="editable">@Model.hoSoUngVien.NoiCapCMND</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Dân tộc </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.DanToc</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Tôn giáo </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.TonGiao</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Nơi sinh </div>
+
+                <div class="profile-info-value">
+                    <i class="fa fa-map-marker light-orange bigger-110"></i>
+                    <span class="editable">@Model.hoSoUngVien.NoiSinh</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Quốc tịch </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.QuocTich</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Quê quán </div>
+
+                <div class="profile-info-value">
+                    <i class="fa fa-map-marker light-orange bigger-110"></i>
+                    <span class="editable">@Model.hoSoUngVien.QueQuan</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Địa chỉ hiện tại </div>
+
+                <div class="profile-info-value">
+                    <i class="fa fa-map-marker light-orange bigger-110"></i>
+                    <span class="editable">@Model.hoSoUngVien.DiaChiHienTai</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Địa chỉ thường trú </div>
+
+                <div class="profile-info-value">
+                    <i class="fa fa-map-marker light-orange bigger-110"></i>
+                    <span class="editable">@Model.hoSoUngVien.DiaChiThuongTru</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Xuất thân </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.XuatThan</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Thu nhập gần nhất </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.ThuNhapGanNhat</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Thu nhập mong muốn </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.ThuNhapMongMuon</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name">Lý do tuyển dụng </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.LyDoUngTuyen</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Người giới thiệu </div>
+
+                <div class="profile-info-value">
+                    <span class="editable">@Model.hoSoUngVien.NguoiGioiThieu</span>
+                </div>
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-name"> Ghi chú </div>
+
+                <div class="profile-info-value">
+                    <span class="editable" >@Model.hoSoUngVien.GhiChu</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-20"></div>
+
+        <div class="hr hr2 hr-double"></div>
+
+        <div class="space-6"></div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $('.chosen-select').chosen({ allow_single_deselect: true });
+    </script>
+}

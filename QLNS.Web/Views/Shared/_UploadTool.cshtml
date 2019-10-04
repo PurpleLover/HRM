@@ -1,0 +1,84 @@
+﻿@using QLNS.Web.Models;
+@model UploadToolModel
+@{
+    var isCounter = 0;
+    if (Model.LstTaiLieu != null && Model.LstTaiLieu.Any())
+    {
+        isCounter += Model.LstTaiLieu.Count();
+    }
+    var idTool = "upload" + Model.LoaiTaiLieu ?? "";
+}
+<div style="width:100%" class="table-responsive-sm">
+    <table class="table table-bordered table-striped table-hover table-upload" id="@idTool">
+        @if (Model.IsModify)
+        {
+            <thead>
+                <tr class="bg-info">
+                    <th class="center width-30px">#</th>
+                    <th class="center">Tên tệp</th>
+                    <th class="center">Tệp</th>
+                    <th class="center"><a href="javascript:void(0)" onclick="addNewFile('@idTool','@Model.LoaiTaiLieu')"><i class="fa fa-plus" style="color:#003479;"></i></a></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.LstTaiLieu != null)
+                {
+                    foreach (var item in Model.LstTaiLieu)
+                    {
+                        <tr data-type="rowItem">
+                            <td>@(Model.LstTaiLieu.IndexOf(item) + 1)</td>
+                            <td><a href="/Uploads/@item.DuongDanFile" download><i class="fa fa-download"></i> @item.TenTaiLieu</a></td>
+                            <td>@string.Format("{0:dd/MM/yyyy HH:mm}", item.CreatedDate)</td>
+                            <td class="center"><a href="javascript:void(0)" onclick="RemoveItem(this, '@idTool',@item.Id)" style="vertical-align:middle"><i class="fa fa-trash-alt" style="color:red;"></i></a></td>
+                        </tr>
+                    }
+                }
+                <tr data-type="rowItem">
+                    <td data-type="stt">@(isCounter + 1)</td>
+                    <td><input type="text" class="form-control" name="name_@Model.LoaiTaiLieu" data-type="intFilename" placeholder="Tên tài liệu" /></td>
+                    <td><input type="file" class="form-control" name="@Model.LoaiTaiLieu" data-type="inpFile" /></td>
+                    <td class="center"><a href="javascript:void(0)" onclick="RemoveItem(this, '@idTool',0)" style="vertical-align:middle"><i class="fa fa-trash-alt" style="color:red;"></i></a></td>
+                </tr>
+            </tbody>
+        }
+        else
+        {
+            <thead>
+                <tr class="bg-info">
+                    <th class="center width-30px">#</th>
+                    <th class="center">Tên tệp</th>
+                    <th class="center">Ngày tạo</th>
+                    <th class="center">Định dạng tệp</th>
+                    <th class="center">Kích thước</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.LstTaiLieu != null)
+                {
+                    foreach (var item in Model.LstTaiLieu)
+                    {
+                        <tr data-type="rowItem">
+                            <td>@(Model.LstTaiLieu.IndexOf(item) + 1)</td>
+                            <td><a href="/Uploads/@item.DuongDanFile" download><i class="fa fa-download"></i> @item.TenTaiLieu</a></td>
+                            <td>@string.Format("{0:dd/MM/yyyy HH:mm}", item.CreatedDate)</td>
+                            <td>@item.DinhDangFile</td>
+                            <td>@item.KichThuoc kB</td>
+                        </tr>
+                    }
+                    if (!Model.LstTaiLieu.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="center">Không có tệp nào</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="center">Không có tệp nào</td>
+                    </tr>
+                }
+            </tbody>
+        }
+    </table>
+</div>

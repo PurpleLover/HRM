@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AFC9D48B-D6FA-41E6-84BC-A43713B5E8B7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QLNS.Model</RootNamespace>
+    <AssemblyName>QLNS.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\AuditableEntity.cs" />
+    <Compile Include="Common\CandidateSelectionTypeConstant.cs" />
+    <Compile Include="Common\DanhMucConstantBase.cs" />
+    <Compile Include="Common\Entity.cs" />
+    <Compile Include="Common\IAuditableEntity.cs" />
+    <Compile Include="Common\IEntity.cs" />
+    <Compile Include="Entities\Audit.cs" />
+    <Compile Include="Entities\CommonConfiguration.cs" />
+    <Compile Include="Entities\ConfigRecruitmentRequest.cs" />
+    <Compile Include="Entities\Department.cs" />
+    <Compile Include="Entities\DM_DulieuDanhmuc.cs" />
+    <Compile Include="Entities\DM_NhomDanhmuc.cs" />
+    <Compile Include="Entities\Module.cs" />
+    <Compile Include="Entities\Operation.cs" />
+    <Compile Include="Entities\RecruitmentRequest.cs" />
+    <Compile Include="Entities\RecruitmentSkill.cs" />
+    <Compile Include="Entities\RecruitmentSkillDetail.cs" />
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\RoleOperation.cs" />
+    <Compile Include="Entities\TaiLieuDinhKem.cs" />
+    <Compile Include="Entities\TD_CauHinhSangLocUngVien.cs" />
+    <Compile Include="Entities\TD_DotTuyenDung.cs" />
+    <Compile Include="Entities\TD_HoSoUngVien.cs" />
+    <Compile Include="Entities\TD_KetQuaPhongVan.cs" />
+    <Compile Include="Entities\TD_QuanLyMauTest.cs" />
+    <Compile Include="Entities\TD_YeuCauVaDotTuyenDung.cs" />
+    <Compile Include="Entities\UserRole.cs" />
+    <Compile Include="IdentityEntities\AppUser.cs" />
+    <Compile Include="Migrations\201905021150256_renewDatabase.cs" />
+    <Compile Include="Migrations\201905021150256_renewDatabase.Designer.cs">
+      <DependentUpon>201905021150256_renewDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905021202470_updateDataTypeDepartment.cs" />
+    <Compile Include="Migrations\201905021202470_updateDataTypeDepartment.Designer.cs">
+      <DependentUpon>201905021202470_updateDataTypeDepartment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905030309235_InitTableConfigRecruitmentRequest.cs" />
+    <Compile Include="Migrations\201905030309235_InitTableConfigRecruitmentRequest.Designer.cs">
+      <DependentUpon>201905030309235_InitTableConfigRecruitmentRequest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905030937323_changePropertyNameOfDepartment.cs" />
+    <Compile Include="Migrations\201905030937323_changePropertyNameOfDepartment.Designer.cs">
+      <DependentUpon>201905030937323_changePropertyNameOfDepartment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905040143144_changeTyleStatusRecruimentRequest.cs" />
+    <Compile Include="Migrations\201905040143144_changeTyleStatusRecruimentRequest.Designer.cs">
+      <DependentUpon>201905040143144_changeTyleStatusRecruimentRequest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905040238411_UpdateRecruitmentRequest.cs" />
+    <Compile Include="Migrations\201905040238411_UpdateRecruitmentRequest.Designer.cs">
+      <DependentUpon>201905040238411_UpdateRecruitmentRequest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905040650347_UpdateRecruitmentRequest1.cs" />
+    <Compile Include="Migrations\201905040650347_UpdateRecruitmentRequest1.Designer.cs">
+      <DependentUpon>201905040650347_UpdateRecruitmentRequest1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905041108578_initTableTD_QuanLyMauTest.cs" />
+    <Compile Include="Migrations\201905041108578_initTableTD_QuanLyMauTest.Designer.cs">
+      <DependentUpon>201905041108578_initTableTD_QuanLyMauTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905041110203_initTableTD_CauHinhSangLocUngVien.cs" />
+    <Compile Include="Migrations\201905041110203_initTableTD_CauHinhSangLocUngVien.Designer.cs">
+      <DependentUpon>201905041110203_initTableTD_CauHinhSangLocUngVien.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905060351269_addPropertyToTableCauhinhSanglocUngvien.cs" />
+    <Compile Include="Migrations\201905060351269_addPropertyToTableCauhinhSanglocUngvien.Designer.cs">
+      <DependentUpon>201905060351269_addPropertyToTableCauhinhSanglocUngvien.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905141115515_updatePropertyOfQuanlyMauTest.cs" />
+    <Compile Include="Migrations\201905141115515_updatePropertyOfQuanlyMauTest.Designer.cs">
+      <DependentUpon>201905141115515_updatePropertyOfQuanlyMauTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QLNSContext.cs" />
+    <Compile Include="Seed\InitAccountSeed.cs" />
+    <Compile Include="Seed\InitDanhMucSeed.cs" />
+    <Compile Include="Seed\InitRoleAdminSeed.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201905021150256_renewDatabase.resx">
+      <DependentUpon>201905021150256_renewDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905021202470_updateDataTypeDepartment.resx">
+      <DependentUpon>201905021202470_updateDataTypeDepartment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905030309235_InitTableConfigRecruitmentRequest.resx">
+      <DependentUpon>201905030309235_InitTableConfigRecruitmentRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905030937323_changePropertyNameOfDepartment.resx">
+      <DependentUpon>201905030937323_changePropertyNameOfDepartment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905040143144_changeTyleStatusRecruimentRequest.resx">
+      <DependentUpon>201905040143144_changeTyleStatusRecruimentRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905040238411_UpdateRecruitmentRequest.resx">
+      <DependentUpon>201905040238411_UpdateRecruitmentRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905040650347_UpdateRecruitmentRequest1.resx">
+      <DependentUpon>201905040650347_UpdateRecruitmentRequest1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905041108578_initTableTD_QuanLyMauTest.resx">
+      <DependentUpon>201905041108578_initTableTD_QuanLyMauTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905041110203_initTableTD_CauHinhSangLocUngVien.resx">
+      <DependentUpon>201905041110203_initTableTD_CauHinhSangLocUngVien.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905060351269_addPropertyToTableCauhinhSanglocUngvien.resx">
+      <DependentUpon>201905060351269_addPropertyToTableCauhinhSanglocUngvien.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905141115515_updatePropertyOfQuanlyMauTest.resx">
+      <DependentUpon>201905141115515_updatePropertyOfQuanlyMauTest.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonHelper\CommonHelper.csproj">
+      <Project>{68e8b2e8-ed8b-4a15-a2bf-2561023c210a}</Project>
+      <Name>CommonHelper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

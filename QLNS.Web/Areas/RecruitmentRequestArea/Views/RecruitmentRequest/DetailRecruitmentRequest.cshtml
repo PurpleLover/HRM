@@ -1,0 +1,195 @@
+﻿@using QLNS.Web.Areas.RecruitmentRequestArea.Models
+@model RecruitmentRequestViewModel.RecruitmentRequestDetailViewModel
+@using QLNS.Service.Constant;
+@{
+    ViewBag.Title = Model.EntityDTO.IsTemplate != true ? "Thông tin nhu cầu tuyển dụng": "Thông tin biểu mẫu nhu cầu tuyển dụng";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = Model.EntityDTO.IsTemplate != true ? "Quản lý nhu cầu tuyển dụng" : "Quản lý biểu mẫu nhu cầu tuyển dụng";
+    ViewBag.PageName = Model.EntityDTO.IsTemplate != true ? "Thông tin nhu cầu tuyển dụng" : "Thông tin biểu mẫu nhu cầu tuyển dụng";
+}
+
+@section ActionBarRight{
+    @if (Model.EntityDTO.IsTemplate == true)
+    {
+        <a href="@Url.Action("Index","TemplateRecruitmentRequest")" class="btn btn-primary btn-sm">
+            <i class="fa fa-list"></i>&nbsp;Danh sách
+        </a>
+    }
+    else
+    {
+        <a href="@Url.Action("Index")" class="btn btn-primary btn-sm">
+            <i class="fa fa-list"></i>&nbsp;Danh sách
+        </a>
+    }
+    <a href="@Url.Action("ConfigRecruitmentRequest", new { id = Model.EntityDTO.Id})" class="btn btn-primary btn-sm">
+        <i class="fa fa-cog"></i>&nbsp;Cấu hình
+    </a>
+}
+
+<style type="text/css">
+    .list-group-item {
+        padding: 0
+    }
+</style>
+
+
+
+<table class="table table-bordered table-hover">
+    @if (Model.EntityDTO.IsTemplate == false)
+    {
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <b>THÔNG TIN  VỀ VỊ TRÍ CẦN TUYỂN</b>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Chức danh:</td>
+                <td>
+                    @Model.EntityDTO.PositionName
+                </td>
+            </tr>
+            <tr>
+                <td>Bộ phận:</td>
+                <td>
+                    @Model.EntityDTO.DepartmentName
+                </td>
+            </tr>
+            <tr>
+                <td>Số lượng:</td>
+                <td>
+                    @Model.EntityDTO.EstimateQuantity
+                </td>
+            </tr>
+        </tbody>
+    }
+
+    <thead>
+        <tr>
+            <th colspan="2">
+                <b>CÁC YÊU CẦU CHÍNH ĐỐI VỚI ỨNG VIÊN</b>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var groupSkill in Model.GroupSkills)
+        {
+            <tr>
+                <td colspan="2" style="padding-left:10px">
+                    <b>
+                        <i class="fa fa-check"></i>&nbsp;@groupSkill.Title.ToUpper()
+                    </b>
+                </td>
+            </tr>
+            foreach (var skill in groupSkill.GroupSkillDetails)
+            {
+                <tr>
+                    <td style="padding-left:50px;">
+                        @skill.Name
+                    </td>
+                    <td>
+                        @if (skill.DataType == DataTypeConstant.CATEGORY)
+                        {
+                            <ul>
+                                @foreach (var data in skill.GroupCategoryData)
+                                {
+                                    <li>
+                                        @data.Name
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else if (skill.DataType == DataTypeConstant.NUMBER)
+                        {
+                            <span>@skill.AbsoluteNumber</span>
+                        }
+                        else if (skill.DataType == DataTypeConstant.TEXT)
+                        {
+                            <span>@skill.TextValue</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@*@foreach (var groupSkill in Model.GroupSkills)
+    {
+        int count = 0;
+        long index = groupSkill.Id;
+
+        <div id="accordion" class="accordion-style1 panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse-@index">
+                            <i class="ace-icon fa fa-angle-down bigger-110" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                            &nbsp;@groupSkill.Title.ToUpper() - (@groupSkill.GroupSkillDetails.Count tiêu chí)
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse collapse" id="collapse-@index">
+                    <div class="panel-body">
+                        <div class="card">
+                            <div class="card-body" style="overflow:hidden">
+                                @foreach (var item in groupSkill.GroupSkillDetails)
+                                {
+                                    <div class="@(groupSkill.GroupSkillDetails.Count == 1 ? "col-sm-12" : "col-sm-6")">
+                                        <div class="widget-box">
+                                            <div class="widget-header widget-header-flat">
+                                                <h4 class="smaller">
+                                                    <b>@item.Name.ToUpper()</b>
+                                                </h4>
+                                            </div>
+
+                                            <div class="widget-body">
+                                                <div class="widget-main">
+                                                    <ul class="list-group">
+                                                        @if (item.DataType == DataTypeConstant.CATEGORY)
+                                                        {
+                                                            foreach (var skill in item.GroupCategoryData)
+                                                            {
+                                                                <li class="list-group-item">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input name="form-field-checkbox" class="ace ace-checkbox-2" type="checkbox">
+                                                                            <span class="lbl">&nbsp;@skill.Name</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        else if (item.DataType == DataTypeConstant.NUMBER)
+                                                        {
+                                                            <li class="list-group-item">
+                                                                <input type="text" value="@item.AbsoluteNumber" class="form-control" placeholder="@item.Name" />
+                                                            </li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li class="list-group-item">
+                                                                <textarea class="form-control" placeholder="@item.Name">@item.TextValue</textarea>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    if ((count + 1) % 2 == 0)
+                                    {
+                                        <div class="clear"></div>
+                                    }
+                                    count++;
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }*@
+

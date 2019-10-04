@@ -1,0 +1,132 @@
+﻿@{
+    ViewBag.Title = "Quản lý vai trò";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý vai trò";
+    ViewBag.PageName = "Danh sách vai trò";
+    ViewBag.ModuleCode = "QLVaiTro";
+
+}
+@using QLNS.Model.Entities;
+@using QLNS.Model.IdentityEntities;
+@using Newtonsoft.Json;
+@using QLNS.Web.Areas.RoleArea.Models;
+
+@model RoleViewModel.RoleIndexViewModel
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model.GroupData.ListItem));
+}
+
+@section ActionBarRight{
+    <a href="#collapseDiv" class="btn btn-sm btn-primary" aria-controls="collapsePanel" data-toggle="collapse" role="button">
+        Tìm kiếm
+    </a>
+    <a href="javascript:void(0)" onclick="CreateAction('/RoleArea/Role/Edit')" class="btn btn-primary btn-sm">Thêm mới</a>
+}
+@Html.Partial("_SearchPartial")
+
+<div id="tbl-role" class="hntbl-cover">
+    <table class="hinet-table table table-striped table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên vai trò</th>
+                <th>Mã vai trò</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        var lstData = eval(@lstData);
+        var moduleTableSelector = "#tbl-role";
+
+        function pagefunction(){
+            var conf=[
+                {
+                    tdClass:"center width50",
+                    isSort:false,
+                    nameModel:"",
+                    isCounter:true,
+                    content: function (data) {
+                        return "<input type='checkbox'/>"
+                    }
+                },
+                {
+                    isSort:true,
+                    nameModel:'Name',
+                    content: function (data) {
+                        return data.Name;
+                    }
+                },
+                 {
+                     isSort:true,
+                     nameModel:'Code',
+                     content: function (data) {
+                         return data.Code
+                     }
+                },
+                   {
+                       isSort:false,
+                       nameModel:"",
+                       tdClass:"center",
+                       content: function (data) {
+                           var result = "<div class='btn-group'>";
+                           result += "<a href='javascript:void(0)' onclick='EditAction(\"/RoleArea/Role/Edit/" + data.Id + "\")'   title = 'Chỉnh sửa'><i class='glyphicon glyphicon-edit'> </i></a> ";
+                           result += "<a href='javascript:void(0)' onclick='onDelete(\"/RoleArea/Role/Delete/" + data.Id + "\")'  title = 'Xóa'><i class=' glyphicon glyphicon-remove' style='color:red'> </i></a>";
+                           result += "<a href='/RoleArea/Role/ConfigureOperation?roleId="+data.Id+"'  title = 'Xóa'><i class='fa fa-cog'> </i></a>";
+                           result += "</div>";
+                           return result;
+                       }
+                   },
+            ];
+
+
+            var getdatafunc=function(page,sortQuery,pageSize){
+                $.ajax({
+                    url: '/RoleArea/Role/GetData',
+                    type: 'post',
+                    cache: false,
+                    data:{"indexPage":page,"sortQuery":sortQuery,"pageSize":pageSize},
+                    success: function (data) {
+                        $(moduleTableSelector).hinetTable("data",{
+                            pageSize:pageSize!=-1?pageSize:data.Count,
+                            pageIndex:page,
+                            pagecount: data.TotalPage,
+                            recordCount: data.Count,
+                            listItem: data.ListItem,});
+                    },
+                    error: function (err) {
+                        CommonJS.alert(xhr.responseText);
+                    }
+                });
+
+            }
+
+            var tblData=$("#tbl-role").hinetTable("init",{
+                pageSizeList:{size:[20,50,100,-1],label:['20','50','100','Tất cả']},
+                pagecount: @Model.GroupData.TotalPage,
+                recordCount: @Model.GroupData.Count,
+                getData:getdatafunc,
+                listItem: lstData,
+                config:conf
+            });
+
+        }
+
+        function AfterSussessActionAjaxform(){
+            $(moduleTableSelector).hinetTable("reload");
+        }
+        function AjaxSearchSuccess(rs) {
+            $(moduleTableSelector).hinetTable("data", {
+                pageIndex: 1,
+                pagecount: rs.TotalPage,
+                recordCount: rs.Count,
+                listItem: rs.ListItem,
+            });
+        }
+        pagefunction();
+    </script>
+}

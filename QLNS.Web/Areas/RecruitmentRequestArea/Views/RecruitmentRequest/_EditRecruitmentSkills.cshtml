@@ -1,0 +1,65 @@
+﻿@using QLNS.Web.Areas.RecruitmentRequestArea.Models
+@model RecruitmentRequestViewModel.RecruitmentSkillsEditViewModel
+<div class="modal-dialog">
+    @using (Ajax.BeginForm("SaveSkills", "RecruitmentRequest", new { @area = "RecruitmentRequestArea" }, new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnFailure = "AjaxFormError",
+        OnSuccess = "AjaxFormSuccess",
+    }, new { id = "form--edit-skills" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="center">
+                    <h4 class="modal-title">
+                        @((Model.Id > 0) ? "CẬp NHẬT KỸ NĂNG" : "THÊM MỚI KỸ NĂNG")
+                    </h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type='hidden' name='Id' value='@Model.Id' />
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Name">
+                            Tên kỹ năng <span class="red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tên kỹ năng con
+                                </th>
+                                <th>
+                                    Loại dữ liệu
+                                </th>
+                                <th>
+                                    <a href="javascript:void(0)" onclick="onAddNewRow(this)" class="btn btn-success btn--add-row" title="Thêm mới" data-request="@Url.Action("GetEditSkillDetailRows")">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <button type="submit" class="btn btn-primary">
+                    Cập nhật
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,65 @@
+﻿@{
+    var CategoryDropdownData = ViewBag.DropdownCategory as List<SelectListItem>;
+}
+
+<style>
+    .row-block {
+        margin: 5px 0px;
+    }
+
+    .txt-label {
+        padding-top: 7px;
+        text-align: right;
+    }
+
+    .width100 {
+        width: 100% !important;
+    }
+</style>
+<div id="collapseDiv" class="panel-collapse collapse" aria-expanded="false" role="tabpanel">
+    <div class="well">
+
+        @using (Ajax.BeginForm("SearchData", "TdQuanLyMauTest", new { Area = "TdQuanLyMauTestArea" },
+            new AjaxOptions()
+            {
+                HttpMethod = "POST",
+                OnFailure = "AjaxFormError",
+                OnSuccess = "AjaxSearchSuccess",
+            }, new { }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row row-block">
+                <div class="col-md-6 row-block">
+
+                    <div class="col-md-4 txt-label">Tiêu đề biểu mẫu</div>
+                    <div class="col-md-8">
+                        <input class="form-control width100" type="text" name="QueryName" />
+                    </div>
+
+                </div>
+                <div class="col-md-6 row-block">
+
+                    <div class="col-md-4 txt-label">Thể loại</div>
+                    <div class="col-md-8">
+                        @Html.ListBox("QueryCategoryList", new MultiSelectList(CategoryDropdownData, "Value", "Text"), new { @class = "form-control chosen-select tag-input-style" })
+                    </div>
+
+                </div>
+                <div class="col-md-12 center" style=" margin-top:20px;">
+                    <button id="btnSearch" type="submit" class="btn btn-labeled btn-primary btn-sm">
+                        <span class="btn-label">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </span>
+                        Tìm kiếm
+                    </button>
+
+                    <a aria-expanded="false" href="#collapseDiv" data-toggle="collapse" role="button" class="btn btn-labeled btn-danger btn-sm">
+                        <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+                        Đóng
+                    </a>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>

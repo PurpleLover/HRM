@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "Quản lý biểu mẫu yêu cầu tuyển dụng";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý biểu mẫu yêu cầu tuyển dụng";
+    ViewBag.PageName = "Danh sách biểu mẫu yêu cầu tuyển dụng";
+
+}
+@using QLNS.Model.Entities;
+@using QLNS.Model.IdentityEntities;
+@using Newtonsoft.Json;
+@using QLNS.Web.Areas.RecruitmentRequestArea.Models;
+
+@model TemplateRecruitmentRequestViewModel.TemplateRecruitmentRequestIndexViewModel
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model.GroupData.ListItem));
+}
+
+@section ActionBarRight{
+    <a href="#collapseDiv" class="btn btn-sm btn-primary" aria-controls="collapsePanel" data-toggle="collapse" role="button">
+        Tìm kiếm
+    </a>
+    <a href="javascript:void(0)" onclick="CreateAction('/RecruitmentRequestArea/TemplateRecruitmentRequest/Edit')" class="btn btn-primary btn-sm">Thêm mới</a>
+}
+@*@Html.Partial("_SearchPartial")*@
+<div id="tbl-data" class="hntbl-cover">
+    <table class="hinet-table table table-striped table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên biểu mẫu</th>
+                <th>Số nhóm kỹ năng</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        var lstData = eval(@lstData);
+        var moduleTableSelector = "#tbl-data";
+
+        function pagefunction() {
+            var conf=[
+                {
+                    tdClass:"center",
+                    isSort: false,
+                    isCounter:true,
+                    nameModel:"",
+                    content: function (data) {
+                        return "<input type='checkbox'/>"
+                    }
+                },
+                {
+                    isSort:true,
+                    nameModel:'Title',
+                    content: function (data) {
+                        return "<a href='/RecruitmentRequestArea/RecruitmentRequest/DetailRecruitmentRequest/"+data.Id+"'>" +data.Title+ "</a>";
+                    }
+                },
+                {
+                    isSort: false,
+                    content: function (data) {
+                        var html = '';
+                        html += "<b>" + data.DataGroupSkills.length + "</b>";
+                        html += '&nbsp;<a id="btn--skill-' + data.Id + '" href="javascript:void(0)" onclick="showSkill(' + data.Id + ')"><i class="fa fa-eye"></i>&nbsp;Xem chi tiết</a>'
+                        html += '<div class="hide" id="block--skill-' + data.Id + '">';
+                        html += "<ul>";
+                        $.each(data.DataGroupSkills, function (index, item) {
+                            html += "<li>" + item.Title + "</li>";
+                        });
+                        html += "</ul>";
+                        html += '</div>';
+                        return html;
+                    }
+                },
+                   {
+                       isSort:false,
+                       nameModel:"",
+                       tdClass:"center",
+                       content: function (data) {
+                           var result = "<div class='btn-group'>";
+                           result += "<a href='javascript:void(0)' onclick='EditAction(\"/RecruitmentRequestArea/TemplateRecruitmentRequest/Edit/" + data.Id + "\")'   title = 'Chỉnh sửa'><i class='glyphicon glyphicon-edit'> </i></a> ";
+                           result += "<a href='javascript:void(0)' onclick='onDelete(\"/RecruitmentRequestArea/TemplateRecruitmentRequest/Delete/" + data.Id + "\")'  title = 'Xóa'><i class=' glyphicon glyphicon-remove' style='color:red'> </i></a>";
+                           result += "<a href='/RecruitmentRequestArea/RecruitmentRequest/ConfigRecruitmentRequest/" + data.Id + "' title = 'Cấu hình'><i class='glyphicon glyphicon-cog' style='color:blue'> </i></a>";
+                           result += "</div>";
+                           return result;
+                       }
+                   },
+            ];
+
+            var getdatafunc=function(page,sortQuery,pageSize){
+                $.ajax({
+                    url: '/RecruitmentRequestArea/TemplateRecruitmentRequest/GetData',
+                    type: 'post',
+                    cache: false,
+                    data:{"indexPage":page,"sortQuery":sortQuery,"pageSize":pageSize},
+                    success: function (data) {
+                        $(moduleTableSelector).hinetTable("data",{
+                            pageSize:pageSize!=-1?pageSize:data.Count,
+                            pageIndex:page,
+                            pagecount: data.TotalPage,
+                            recordCount: data.Count,
+                            listItem: data.ListItem,});
+                    },
+                    error: function (err) {
+                        CommonJS.alert(xhr.responseText);
+                    }
+                });
+
+            }
+
+            var tblData=$("#tbl-data").hinetTable("init",{
+                pageSizeList:{size:[20,50,100,-1],label:['20','50','100','Tất cả']},
+                pagecount: @Model.GroupData.TotalPage,
+                recordCount: @Model.GroupData.Count,
+                getData:getdatafunc,
+                listItem: lstData,
+                config:conf
+            });
+
+        }
+
+        function AfterSussessActionAjaxform(){
+            $(moduleTableSelector).hinetTable("reload");
+        }
+        function AjaxSearchSuccess(rs) {
+            $(moduleTableSelector).hinetTable("data", {
+                pageIndex: 1,
+                pagecount: rs.TotalPage,
+                recordCount: rs.Count,
+                listItem: rs.ListItem,
+            });
+        }
+        pagefunction();
+
+        function showSkill(id) {
+            var button = $('#btn--skill-' + id);
+            var target = $('#block--skill-' + id);
+            if (target != null) {
+                if (target.hasClass('hide')) {
+                    button.html('<i class="fa fa-eye-slash"></i>&nbsp;Ẩn chi tiết');
+                    target.removeClass('hide');
+                } else {
+                    target.addClass('hide');
+                    button.html('<i class="fa fa-eye"></i>&nbsp;Xem chi tiết');
+                }
+            }
+        }
+    </script>
+}

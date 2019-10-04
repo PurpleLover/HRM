@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý nhóm danh mục";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý cấu hình chung";
+    ViewBag.PageName = "Danh sách các cấu hình";
+}
+@using QLNS.Model.Entities;
+@using Newtonsoft.Json;
+@using QLNS.Service.Common;
+@using QLNS.Service.CommonConfigurationService.DTO;
+@model PageListResultBO<CommonConfigurationDTO>
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model.ListItem));
+}
+
+<style>
+    .action-icon {
+        margin-right: 5px;
+    }
+
+    .toUpper {
+        text-transform: uppercase;
+    }
+</style>
+
+
+@section ActionBarRight{
+    <a href="#collapseDiv" class="btn btn-sm btn-primary" aria-controls="collapsePanel" data-toggle="collapse" role="button">
+        Tìm kiếm
+    </a>
+    <a href="javascript:void(0)" onclick="CreateAction('/CommonConfigurationArea/CommonConfiguration/Create')" class="btn btn-primary btn-sm">Thêm mới</a>
+}
+@Html.Partial("_SearchPartial")
+
+<div id="tbl-CommonConfiguration" class="hntbl-cover">
+    <table class="hinet-table table table-striped table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th style="width:5%">#</th>
+                <th style="width:20%">Tên</th>
+                <th style="width:20%">Mã</th>
+                <th style="width:40%">Dữ liệu</th>
+                <th style="width:15%">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        var lstData = eval(@lstData);
+        var moduleTableSelector="#tbl-CommonConfiguration";
+        function pagefunction(){
+            var conf = [
+                {
+                    tdClass: "center",
+                    isSort: false,
+                    isCounter: true,
+                    nameModel: "",
+                    content: function (data) {
+                        return "<input type='checkbox'/>"
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'ConfigName',
+                    content: function (data) {
+                        return data.ConfigName
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'ConfigCode',
+                    content: function (data) {
+                        return data.ConfigCode
+                    }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'ConfigData',
+                    content: function (data) {
+                        return data.ConfigData
+                    }
+                },
+                {
+                    isSort: false,
+                    nameModel: "",
+                    content: function (data) {
+                        var result = "<div class='btn-group' style='display:flex; justify-content:center;'>";
+                        result += "<a style='margin-right:5px;' class='btn btn-primary btn-sm' href='javascript:void(0)' onclick='EditAction(\"/CommonConfigurationArea/CommonConfiguration/Edit/" + data.Id + "\")'   title = 'Chỉnh sửa'><i class='glyphicon glyphicon-edit action-icon'> </i>Chỉnh sửa</a> ";
+                        result += "<a style='margin-right:5px;' class='btn btn-danger btn-sm' href='javascript:void(0)' onclick='onDelete(\"/CommonConfigurationArea/CommonConfiguration/Delete/" + data.Id + "\")'  title = 'Xóa'><i class=' glyphicon glyphicon-remove action-icon'> </i>Xoá</a>";
+                        result += "</div>";
+                        return result;
+                    }
+                },
+            ];
+
+
+            var getdatafunc=function(page,sortQuery,pageSize){
+                $.ajax({
+                    url: '/CommonConfigurationArea/CommonConfiguration/GetData',
+                    type: 'post',
+                    cache: false,
+                    data:{"indexPage":page,"sortQuery":sortQuery,"pageSize":pageSize},
+                    success: function (data) {
+                        $(moduleTableSelector).hinetTable("data",{
+                            pageSize:pageSize!=-1?pageSize:data.Count,
+                            pageIndex:page,
+                            pagecount: data.TotalPage,
+                            recordCount: data.Count,
+                            listItem: data.ListItem,});
+                    },
+                    error: function (err) {
+                        CommonJS.alert(xhr.responseText);
+                    }
+                });
+
+            }
+
+            var tblData=$("#tbl-CommonConfiguration").hinetTable("init",{
+                pageSizeList:{size:[20,50,100,-1],label:['20','50','100','Tất cả']},
+                pagecount: @Model.TotalPage,
+                recordCount: @Model.Count,
+                getData:getdatafunc,
+                listItem:lstData,
+                config:conf
+            });
+
+        }
+
+        function AfterSussessActionAjaxform(){
+            $(moduleTableSelector).hinetTable("reload");
+        }
+        function AjaxSearchSuccess(rs) {
+            $(moduleTableSelector).hinetTable("data", {
+                pageIndex: 1,
+                pagecount: rs.TotalPage,
+                recordCount: rs.Count,
+                listItem: rs.ListItem,
+            });
+        }
+        pagefunction();
+    </script>
+}

@@ -1,0 +1,73 @@
+﻿<style>
+    .row-block {
+        margin: 5px 0px;
+    }
+
+    .txt-label {
+        padding-top: 7px;
+        text-align: right;
+    }
+
+    .width100 {
+        width: 100% !important;
+    }
+</style>
+<div id="collapseDiv" class="panel-collapse collapse" aria-expanded="false" role="tabpanel">
+    <div class="well">
+        @using (Ajax.BeginForm("SearchData", "Operation", new { Area = "OperationArea" },
+            new AjaxOptions()
+            {
+                HttpMethod = "POST",
+                OnFailure = "AjaxFormError",
+                OnSuccess = "AjaxSearchSuccess",
+            }, new { }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row row-block">
+                <input type="hidden" name="QUERY_MODULE_ID" value="@Model.ModuleId"/>
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">
+                        <label for="QUERY_NAME" class="control-label">
+                            Tên thao tác
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control width100" type="text" name="QUERY_NAME" id="QUERY_NAME" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">
+                        <label for="QUERY_SHOW" class="control-label">
+                            Trạng thái
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" name="QUERY_SHOW" id="QUERY_SHOW">
+                            <option value="">--- Chọn ---</option>
+                            <option value="1">Hiển thị</option>
+                            <option value="0">Không hiển thị</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12 center" style=" margin-top:20px;">
+                    <button id="btnSearch" type="submit" class="btn btn-labeled btn-primary btn-sm">
+                        <span class="btn-label">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </span>
+                        Tìm kiếm
+                    </button>
+
+                    <a aria-expanded="false" href="#collapseDiv" data-toggle="collapse" role="button" class="btn btn-labeled btn-danger btn-sm">
+                        <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+                        Đóng
+                    </a>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+

@@ -1,0 +1,14 @@
+﻿@model IEnumerable<SelectListItem>
+<tr>
+    <td>
+        <input type="text" class="form-control" name="Title" />
+    </td>
+    <td>
+        @Html.DropDownList("DataType", Model, "--- Chọn kiểu dữ liệu ---", new { @class = "form-control" })
+    </td>
+    <td>
+        <a class="btn btn-danger" onclick="onRemoveRow(this)" href="javascript:void(0)">
+            <i class="fa fa-remove"></i>
+        </a>
+    </td>
+</tr>

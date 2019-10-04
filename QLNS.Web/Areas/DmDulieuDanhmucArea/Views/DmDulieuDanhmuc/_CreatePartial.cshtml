@@ -1,0 +1,64 @@
+﻿@using QLNS.Web.Areas.DmDulieuDanhmucArea.Models;
+
+@model CreateVM
+
+<div class="modal-dialog">
+    @using (Ajax.BeginForm("Create", "DmDulieuDanhmuc", new { @area = "DmDulieuDanhmucArea" }, new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnFailure = "AjaxFormError",
+        OnSuccess = "AjaxFormSuccess",
+    }, new { id = "createForm" }))
+    {
+        @Html.AntiForgeryToken()
+        //HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="center">
+                    <h4 class="modal-title">Thêm mới dữ liệu</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    @Html.HiddenFor(m => m.GroupId)
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Tên<span class="red">*</span></label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Mã<span class="red">*</span></label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Code, new { @class = "form-control toUpper" })
+                            @Html.ValidationMessageFor(m => m.Code, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Thứ tự hiển thị</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Priority, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Priority, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Ghi chú</label>
+                        <div class="col-sm-8">
+                            @Html.TextAreaFor(m => m.Note, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Note, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <button type="submit" class="btn btn-primary">Hoàn thành</button>
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    }
+</div>
+@Scripts.Render("~/bundles/jqueryval")

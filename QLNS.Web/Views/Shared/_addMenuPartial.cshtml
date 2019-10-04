@@ -1,0 +1,47 @@
+﻿
+<div id="right-menu" class="modal aside" data-body-scroll="false" data-offset="true" data-placement="right" data-fixed="true" data-backdrop="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header no-padding">
+                <div class="table-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span class="white">&times;</span>
+                    </button>
+                    Thiết lập Menu
+                </div>
+            </div>
+
+            <div class="modal-body" id="AddMenuFormBox">
+
+
+
+            </div>
+        </div><!-- /.modal-content -->
+
+        <button class="aside-trigger btn btn-info btn-app btn-xs ace-settings-btn" data-target="#right-menu" data-toggle="modal" type="button">
+            <i data-icon1="fa-plus" data-icon2="fa-minus" class="ace-icon fa fa-plus bigger-110 icon-only"></i>
+        </button>
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script>
+    $('.modal.aside').ace_aside();
+    $('#right-menu').on('shown.bs.modal', function (e) {
+        $.ajax({
+            url: '/OperationArea/Operation/AddOperation',
+            type: 'post',
+            data: { 'url': window.location.pathname },
+            success: function (rs) {
+                $("#AddMenuFormBox").html(rs);
+            },
+            error: function (e) {
+                console.log("Lỗi xử lý")
+            }
+        })
+    })
+    $('#right-menu').on('hidden.bs.modal', function (e) {
+        $("#AddMenuFormBox").html("");
+      
+    })
+
+</script>

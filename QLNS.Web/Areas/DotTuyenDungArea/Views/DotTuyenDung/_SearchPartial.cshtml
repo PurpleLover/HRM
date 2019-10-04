@@ -1,0 +1,90 @@
+﻿<style>
+    .row-block {
+        margin: 5px 0px;
+    }
+
+    .txt-label {
+        padding-top: 7px;
+        text-align: right;
+    }
+
+    .width100 {
+        width: 100% !important;
+    }
+</style>
+<div id="collapseDiv" class="panel-collapse collapse" aria-expanded="false" role="tabpanel">
+    <div class="well SearchBox">
+
+        @using (Ajax.BeginForm("searchData", "dottuyendung", new { Area = "dottuyendungArea" },
+            new AjaxOptions()
+            {
+                HttpMethod = "POST",
+                OnFailure = "AjaxFormError",
+                OnSuccess = "AjaxSearchSuccess",
+            }, new { }))
+        {
+            @Html.AntiForgeryToken()
+        <div class="row row-block">
+            <div class="col-md-6 row-block">
+
+                <div class="col-md-4 txt-label">Tên đợt tuyển dụng</div>
+                <div class="col-md-8">
+                    <input class="form-control width100" type="text" name="seaTenDot" />
+                </div>
+
+            </div>
+            <div class="col-md-6 row-block">
+
+                <div class="col-md-4 txt-label">Trạng thái</div>
+                <div class="col-md-8">
+                    @Html.DropDownList("seaTrangThai", new List<SelectListItem>() {
+              new SelectListItem { Text = "-- Chọn trạng thái --", Value= ""},
+              new SelectListItem { Text = "Mới tạo", Value = "MOITAO" },
+              new SelectListItem { Text = "Đã duyệt", Value = "DADUYET" },
+               },
+              new { @class = " form-control", @style = "width:100%" })
+                </div>
+
+            </div>
+            <div class="col-md-6 row-block">
+
+                <div class="col-md-4 txt-label">Ngày bắt đầu</div>
+                <div class="col-md-4">
+                    <input class="form-control width100 txt-picker" type="text" name="ngaybatdaufrom" placeholder="Từ" />
+                </div>
+                <div class="col-md-4">
+                    <input class="form-control width100 txt-picker" type="text" name="ngaybatdauto" placeholder="Đến" />
+                </div>
+
+            </div>
+            <div class="col-md-6 row-block">
+
+                <div class="col-md-4 txt-label">Ngày kết thúc</div>
+                <div class="col-md-4">
+                    <input class="form-control width100 txt-picker" type="text" name="ngayketthucfrom" placeholder="Từ" />
+                </div>
+                <div class="col-md-4">
+                    <input class="form-control width100 txt-picker" type="text" name="ngayketthucto" placeholder="Đến" />
+                </div>
+
+            </div>
+
+            <div class="col-md-12 center" style=" margin-top:20px;">
+                <button id="btnSearch" type="submit" class="btn btn-labeled btn-primary btn-sm">
+                    <span class="btn-label">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </span>
+                    Tìm kiếm
+                </button>
+
+                <a aria-expanded="false" href="#collapseDiv" data-toggle="collapse" role="button" class="btn btn-labeled btn-danger btn-sm">
+                    <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+                    Đóng
+                </a>
+            </div>
+        </div>
+
+        }
+    </div>
+</div>
+

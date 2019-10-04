@@ -1,0 +1,166 @@
+﻿@using QLNS.Model.Entities;
+@using Newtonsoft.Json;
+@using QLNS.Web.Areas.RecruitmentSkillDetailArea.Models;
+@{
+    ViewBag.Title = "Quản lý kỹ năng";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý kỹ năng";
+    ViewBag.PageName = "Danh sách kỹ năng";
+
+}
+
+@model RecruitmentSkillDetailViewModel.RecruitmentSkillDetailIndexViewModel
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model.GroupData.ListItem));
+}
+
+@section ActionBarRight{
+    <a href="#collapseDiv" class="btn btn-sm btn-primary" aria-controls="collapsePanel" data-toggle="collapse" role="button">
+        Tìm kiếm
+    </a>
+    <a href="javascript:void(0)" onclick="CreateAction('/RecruitmentSkillDetailArea/RecruitmentSkillDetail/Edit')" class="btn btn-primary btn-sm">Thêm mới</a>
+}
+@Html.Partial("_SearchPartial")
+
+<div id="tbl--recruitment-skill" class="hntbl-cover">
+    <table class="hinet-table table table-striped table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên kỹ năng</th>
+                <th>Loại dữ liệu</th>
+                <th>Giá trị</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script>
+        var lstData = eval(@lstData);
+        var moduleTableSelector = "#tbl--recruitment-skill";
+
+        function pagefunction(){
+            var conf=[
+                {
+                    tdClass:"center",
+                    isSort: false,
+                    isCounter: true,
+                    nameModel:"",
+                    content: function (data) {
+                        return "<input type='checkbox'/>"
+                    }
+                },
+                {
+                    isSort:true,
+                    nameModel:'Name',
+                    content: function (data) {
+                        return data.Name;
+                    }
+                },
+                 {
+                     isSort:true,
+                     nameModel:'DataType',
+                     content: function (data) {
+                         return data.DataTypeName
+                     }
+                },
+                {
+                    isSort: true,
+                    nameModel: 'DataTypeValue',
+                    content: function (data) {
+                        if (data.GroupCategoryData == null) {
+                            return data.DataTypeValue;
+                        } else {
+                            var html = '';
+                            html += "<b>" + data.DataTypeValue+"</b>";
+                            html += '&nbsp;<a id="btn--category-' + data.Id + '" href="javascript:void(0)" onclick="showDataCategory(' + data.Id + ')"><i class="fa fa-eye"></i>&nbsp;Xem giá trị</a>'
+                            html += '<div class="hide" id="block--category-'+data.Id+'">';
+                            html += "<ul>";
+                            $.each(data.GroupCategoryData, function (index, item) {
+                                html += "<li>" + item.Name + "</li>";
+                            });
+                            html += "</ul>";
+                            html += '</div>';
+                            return html;
+                        }
+                    }
+                },
+                   {
+                       isSort:false,
+                       nameModel:"",
+                       tdClass:"center",
+                       content: function (data) {
+                           var result = "<div class='btn-group'>";
+                           result += "<a href='javascript:void(0)' onclick='EditAction(\"/RecruitmentSkillDetailArea/RecruitmentSkillDetail/Edit?id=" + data.Id + "\")'   title = 'Chỉnh sửa'><i class='glyphicon glyphicon-edit'> </i></a> ";
+                           result += "<a href='javascript:void(0)' onclick='onDelete(\"/RecruitmentSkillDetailArea/RecruitmentSkillDetail/Delete/" + data.Id + "\")'  title = 'Xóa'><i class=' glyphicon glyphicon-remove' style='color:red'> </i></a>";
+                           result += "</div>";
+                           return result;
+                       }
+                   },
+            ];
+
+
+            var getdatafunc=function(page,sortQuery,pageSize){
+                $.ajax({
+                    url: '/RecruitmentSkillDetailArea/RecruitmentSkillDetail/GetData',
+                    type: 'post',
+                    cache: false,
+                    data:{"indexPage":page,"sortQuery":sortQuery,"pageSize":pageSize},
+                    success: function (data) {
+                        $(moduleTableSelector).hinetTable("data",{
+                            pageSize:pageSize!=-1?pageSize:data.Count,
+                            pageIndex:page,
+                            pagecount: data.TotalPage,
+                            recordCount: data.Count,
+                            listItem: data.ListItem,});
+                    },
+                    error: function (err) {
+                        CommonJS.alert(xhr.responseText);
+                    }
+                });
+
+            }
+
+            var tblData = $("#tbl--recruitment-skill").hinetTable("init",{
+                pageSizeList:{size:[20,50,100,-1],label:['20','50','100','Tất cả']},
+                pagecount: @Model.GroupData.TotalPage,
+                recordCount: @Model.GroupData.Count,
+                getData:getdatafunc,
+                listItem: lstData,
+                config:conf
+            });
+
+        }
+
+        function AfterSussessActionAjaxform() {
+            $(moduleTableSelector).hinetTable("reload");
+        }
+        function AjaxSearchSuccess(rs) {
+            $(moduleTableSelector).hinetTable("data", {
+                pageIndex: 1,
+                pagecount: rs.TotalPage,
+                recordCount: rs.Count,
+                listItem: rs.ListItem,
+            });
+        }
+        pagefunction();
+
+        function showDataCategory(id) {
+            var button = $('#btn--category-' + id);
+            var target = $('#block--category-' + id);
+            if (target != null) {
+                if (target.hasClass('hide')) {
+                    button.html('<i class="fa fa-eye-slash"></i>&nbsp;Ẩn giá trị');
+                    target.removeClass('hide');
+                } else {
+                    target.addClass('hide');
+                    button.html('<i class="fa fa-eye"></i>&nbsp;Xem giá trị');
+                }
+            }
+        }
+    </script>
+}
+

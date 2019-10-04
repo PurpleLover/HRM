@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "Thông tin đợt tuyển dụng";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý đợt tuyển dụng";
+    ViewBag.PageName = ViewBag.Title;
+
+}
+@using QLNS.Model.Entities
+@using Newtonsoft.Json
+@using QLNS.Service.TD_HoSoUngVienService.DTO
+@using QLNS.Service.Common
+@using QLNS.Web.Models
+@using QLNS.Service.Constant
+@using QLNS.Web.Areas.DotTuyenDungArea.Models
+@using QLNS.Service.RecruitmentRequestService.DTO;
+@using QLNS.Web.Areas.DotTuyenDungArea.Models
+@model DetailViewModel
+<style>
+    table tr td {
+        padding: 5px 3px;
+    }
+</style>
+
+@Scripts.Render("~/bundles/jquery")
+<div class="tabbable">
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="active">
+            <a data-toggle="tab" href="#info">
+                <i class="green ace-icon fa fa-home bigger-120"></i>
+                Thông tin
+            </a>
+        </li>
+
+        <li>
+            <a data-toggle="tab" href="#candidate">
+                Ứng viên
+                <span class="badge badge-danger">@Model.dsUngVien.Count()</span>
+            </a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#filterCandidate">
+                Sàng lọc ứng viên
+
+            </a>
+        </li>
+
+
+    </ul>
+    <div class="tab-content">
+        <div id="info" class="tab-pane fade in active">
+            @Html.Partial("_infoPartial", Model)
+        </div>
+
+        <div id="candidate" class="tab-pane fade">
+
+            @Html.Partial("_candidatePartial", Model)
+        </div>
+        <div id="filterCandidate" class="tab-pane fade">
+            @Html.Action("Index", "TdCauHinhSangLocUngVien", new { Area = "TdCauHinhSangLocUngVienArea", id = Model.dotTuyenDung.Id })
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+@section ActionBarRight{
+    <a href="/DotTuyenDungArea/DotTuyenDung/Index" class="btn btn-primary btn-sm"><i class="fa fa-reply"></i> Quay lại</a>
+    @if (Model.dotTuyenDung.TrangThai == DotTuyenDungTrangThaiConst.MoiTao)
+    {
+        <a href="javascript:void(0)" onclick="ConfirmAction('/dottuyendungArea/dottuyendung/ChangeStatus', 'post',{'id':@Model.dotTuyenDung.Id,'status':'@DotTuyenDungTrangThaiConst.DaDuyet'},'Xác nhận phê duyệt đợt tuyển dụng')" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-check"></i> Phê duyệt</a>
+    }
+
+
+}
+
+
+@section scripts{
+    <script>
+        $('.profile-feed').ace_scroll({
+            height: '250px',
+            mouseWheelLock: true,
+            alwaysVisible: true
+        });
+        $('[data-rel=popover]').popover({ html: true });
+        
+    </script>
+}

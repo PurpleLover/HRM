@@ -1,0 +1,91 @@
+﻿@using QLNS.Web.Areas.RecruitmentRequestArea.Models;
+@model RecruitmentRequestViewModel.RecruitmentRequestIndexViewModel
+<style>
+    .row-block {
+        margin: 5px 0px;
+    }
+
+    .txt-label {
+        padding-top: 7px;
+        text-align: right;
+    }
+
+    .width100 {
+        width: 100% !important;
+    }
+</style>
+<div id="collapseDiv" class="panel-collapse collapse" aria-expanded="false" role="tabpanel">
+    <div class="well">
+
+        @using (Ajax.BeginForm("SearchData", "RecruitmentRequest", new { Area = "RecruitmentRequestArea" },
+            new AjaxOptions()
+            {
+                HttpMethod = "POST",
+                OnFailure = "AjaxFormError",
+                OnSuccess = "AjaxSearchSuccess",
+            }, new { }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row row-block">
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">Phòng ban</div>
+                    <div class="col-md-8">
+                        @Html.DropDownList("QueryDepartmentId", Model.GroupDepartments, "--- Chọn ----", new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">Vị trí</div>
+                    <div class="col-md-8">
+                        @Html.DropDownList("QueryPositions", Model.GroupPositions, "--- Chọn ----", new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">Hạn tuyển (từ)</div>
+                    <div class="col-md-8">
+                        <input type="text" name="QueryUntilDateFrom" class="form-control txt-picker" />
+                        @*@Html.DatePickerFor(m => m.QueryUntilDateFrom, "autoclose=true", "todayBtn=true", "todayHighlight=true")*@
+                    </div>
+                </div>
+
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">Hạn tuyển (đến)</div>
+                    <div class="col-md-8">
+                        <input type="text" name="QueryUntileDateTo" class="form-control txt-picker" />
+                        @*@Html.DatePickerFor(m => m.QueryUntileDateTo, "autoclose=true", "todayBtn=true", "todayHighlight=true")*@
+                    </div>
+                </div>
+
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">Số lượng tuyển (từ)</div>
+                    <div class="col-md-8">
+                        <input type="text" name="QueryQuantityFrom" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 row-block">
+                    <div class="col-md-4 txt-label">Số lượng (đến)</div>
+                    <div class="col-md-8">
+                        <input type="text" name="QueryQuantityTo" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-md-12 center" style=" margin-top:20px;">
+                    <button id="btnSearch" type="submit" class="btn btn-labeled btn-primary btn-sm">
+                        <span class="btn-label">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </span>
+                        Tìm kiếm
+                    </button>
+
+                    <a aria-expanded="false" href="#collapseDiv" data-toggle="collapse" role="button" class="btn btn-labeled btn-danger btn-sm">
+                        <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+                        Đóng
+                    </a>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>

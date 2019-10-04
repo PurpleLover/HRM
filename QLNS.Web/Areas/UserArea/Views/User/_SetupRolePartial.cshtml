@@ -1,0 +1,52 @@
+﻿@using QLNS.Model.IdentityEntities
+@using QLNS.Web.Areas.UserArea.Models
+@using QLNS.Model.Entities;
+@{
+    var userinfo = ViewBag.UserInfo as AppUser;
+    var ListRole = ViewBag.ListRole as List<Role>;
+    var UserListRole = ViewBag.UserListRole as List<UserRole>;
+}
+
+<div class="modal-dialog">
+    @using (Ajax.BeginForm("SaveSetupRole", "User", new { @area = "UserArea" }, new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnFailure = "AjaxFormError",
+        OnSuccess = "AjaxFormSuccess",
+    }, new { id = "setupRoleForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("userId",userinfo.Id)
+        //HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="center">
+                    <h4 class="modal-title">Thiết lập vai trò </h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                @*<h3 class="nomargin center red"><strong>Tài khoản : [@userinfo.UserName]</strong></h3>*@
+                <h4 class="headerForm">
+                    Chọn vai trò cho người dùng [@userinfo.UserName]
+                </h4>
+                <div>
+                    @foreach (var item in ListRole)
+                    {
+                        <div class="ace-settings-item">
+                            <input name="ListRoleUser" type="checkbox" value="@item.Id" @(UserListRole.Any(x => x.RoleId == item.Id) ? "checked" : "") class="ace ace-checkbox-2" id="ace-settings-@item.Id" />
+                            <label class="lbl" for="ace-settings-@item.Id"> @item.Name</label>
+                        </div>
+                                            }
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <button type="submit" class="btn btn-primary">Hoàn thành</button>
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+}
+</div>
+@Scripts.Render("~/bundles/jqueryval")

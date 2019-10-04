@@ -1,0 +1,87 @@
+﻿@using QLNS.Web.Areas.DotTuyenDungArea.Models
+@using QLNS.Web.Models
+@using QLNS.Service.Constant
+@using QLNS.Service.Common
+@model DetailViewModel
+
+<div class="row ">
+    <div class="col-sm-6">
+        <h4 class="headerForm">Thông tin đợt tuyển dụng</h4>
+
+        <table class="table-info">
+            <tr>
+                <td>Tên đợt tuyển dụng:</td>
+                <td>@Model.dotTuyenDung.TenDot</td>
+            </tr>
+            <tr>
+                <td>Ngày bắt đầu:</td>
+                @if (Model.dotTuyenDung.NgayBatDau.HasValue)
+                {
+                    <td>@Model.dotTuyenDung.NgayBatDau.Value.ToString("dd/MM/yyyy")</td>
+                }
+                else
+                {
+                    <td><span class="red">Chưa cập nhật</span></td>
+                }
+            </tr>
+            <tr>
+                <td>Ngày kết thúc:</td>
+                @if (Model.dotTuyenDung.NgayBatDau.HasValue)
+                {
+                    <td>@Model.dotTuyenDung.NgayKetThuc.Value.ToString("dd/MM/yyyy")</td>
+                }
+                else
+                {
+                    <td><span class="red">Chưa cập nhật</span></td>
+                }
+            </tr>
+            <tr>
+                <td>Trạng thái:</td>
+                <td>@(ConstantExtension.GetName<DotTuyenDungTrangThaiConst>(Model.dotTuyenDung.TrangThai))</td>
+            </tr>
+            <tr>
+                <td>Ghi chú:</td>
+                <td>@Model.dotTuyenDung.GhiChu</td>
+            </tr>
+        </table>
+        <div class="row" style="margin-left:10px;">
+            <div class="col-sm-12">
+                @Html.Partial("_UploadTool", new UploadToolModel() { IsModify = false, LoaiTaiLieu = LoaiTaiLieuUploadConstant.DotTuyenDung, LstTaiLieu = Model.taiLieuDinhKem })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <h4 class="headerForm">Danh sách yêu cầu tuyển dụng</h4>
+        <div>
+            <table class="table table-bordered table-hover hinet-table">
+                <thead>
+                    <tr>
+                        <td>STT</td>
+                        <td>Yêu cầu</td>
+                        <td>Số lượng</td>
+                        <td>Phòng ban</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.listYeuCauTuyenDungDot)
+                    {
+                        <tr>
+                            <td>@(Model.listYeuCauTuyenDungDot.IndexOf(item) + 1)</td>
+                            <td>
+                                <a href="#" class="">
+                                    <span class="lbl"> <strong style="color:#d35400;">@item.Title</strong> </span>
+                                </a>
+                            </td>
+                            <td>
+                                @item.EstimateQuantity
+                            </td>
+                            <td>@item.DepartmentName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+           
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,86 @@
+﻿@using QLNS.Model.IdentityEntities
+@using QLNS.Web.Areas.UserArea.Models
+
+@model EditVM
+
+<div class="modal-dialog">
+    @using (Ajax.BeginForm("Edit", "User", new { @area = "UserArea" }, new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnFailure = "AjaxFormError",
+        OnSuccess = "AjaxFormSuccess",
+    }, new { id = "editForm" }))
+    {
+        @Html.AntiForgeryToken()
+        //HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="center">
+                    <h4 class="modal-title">Cập nhật thông tin người dùng</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type='hidden' name='Id' value='@Model.Id' />
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Họ tên <span class="red">*</span></label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Email </label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Điện thoại </label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Ngày sinh </label>
+                        <div class="col-sm-8">
+                            @Html.DatePickerFor(m => m.BirthDay, "autoclose=true", "todayBtn=true", "todayHighlight=true")
+                            @Html.ValidationMessageFor(m => m.BirthDay, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Giới tính</label>
+                        <div class="col-sm-8">
+
+                            <label>
+                                <input type="radio" name="Gender" value="1" @(Model.Gender == 1 ? "checked" : "") />Nam
+                            </label>
+                            <label>
+                                <input type="radio" name="Gender" value="2" @(Model.Gender == 2 ? "checked" : "") />Nữ
+                            </label>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Địa chỉ</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <button type="submit" class="btn btn-primary">Hoàn thành</button>
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    }
+</div>
+@Scripts.Render("~/bundles/jqueryval")

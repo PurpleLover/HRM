@@ -1,0 +1,184 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý phòng ban";
+    Layout = "~/Views/Shared/_LayoutAce.cshtml";
+    ViewBag.ModuleName = "Quản lý phòng ban";
+    ViewBag.PageName = "Danh sách phòng ban";
+}
+@using QLNS.Model.Entities;
+@using Newtonsoft.Json;
+@using QLNS.Service.Common;
+@using QLNS.Service.DepartmentService.DTO;
+@model DepartmentDTO
+@{
+    var lstData = Html.Raw(JsonConvert.SerializeObject(Model));
+}
+
+<style>
+    .action-icon {
+        margin-right: 5px;
+    }
+
+    .toUpper {
+        text-transform: uppercase;
+    }
+
+    .dd-item {
+        cursor: pointer;
+    }
+    .dataCode {
+        font-style: italic;
+        font-size: 0.85rem;
+    }
+</style>
+
+@section ActionBarRight{
+    @if (Model == null)
+    {
+        <a href="javascript:void(0)" onclick="CreateAction('/DepartmentArea/Department/Create')" class="btn btn-primary btn-sm">Thêm mới</a>
+    }
+    <a href="javascript:void(0)" onclick="saveChangesOnTree()" class="btn btn-primary btn-sm"><i class="fa fa-save action-icon"></i>Lưu thay đổi</a>
+}
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="dd" id="nestable">
+            <ol class="dd-list" id="rootTree"></ol>
+        </div>
+    </div>
+</div>
+@section css{
+    <link href="~/Scripts/MenuContext/jquery.contextMenu.min.css" rel="stylesheet" />
+}
+@section scripts{
+    <script src="~/assets/js/jquery.nestable.min.js"></script>
+    <script src="~/Scripts/MenuContext/jquery.contextMenu.min.js"></script>
+    <script>
+        var lstData = eval(@lstData), changed = false;
+
+        // generate whole Department Tree
+        function generateTree(item = {}) {
+            let result = "";
+            if (item.Child != null && item.Child.length > 0) {
+                result += `<li class="dd-item" data-id="${item.Id}">
+                <button data-action="collapse" type="button">Collapse</button><button data-action="expand" type="button" style="display: none;">Expand</button>
+                <div class="dd-handle ${item.ParentId === null ? 'dd-nodrag' : ''}">
+                    <span>${item.Name}</span><span class="dataCode">&nbsp; ${item.Code}</span>
+                </div>
+                <ol class="dd-list">`;
+                for (let i = 0; i < item.Child.length; ++i) {
+                    result += generateTree(item.Child[i]);
+                }
+                result += "</ol></li>";
+            }
+            else {
+                result += `<li class="dd-item" data-id="${item.Id}">
+                <div class="dd-handle">
+                    <span>${item.Name}</span><span class="dataCode">&nbsp; ${item.Code}</span>
+                </div>
+            </li>`
+            }
+            $('.dd').nestable();
+            $('.dd-handle a').on('mousedown', function (e) {
+                e.stopPropagation();
+            });
+            $('[data-rel="tooltip"]').tooltip();
+            return result;
+        }
+
+        // if changed priority
+        $('.dd').on('change', function () {
+            changed = true;
+        });
+        function saveChangesOnTree() {
+            var jsonString = JSON.stringify(
+                $('.dd')
+                    .nestable('serialize')
+                    .sort(function (x, y) {
+                        return x.id > y.id ? 1 : -1
+                    })
+            );
+            if (!changed || jsonString.length < 1 || jsonString === null) {
+                NotiError("Cảnh báo", "Không có thay đổi");
+            }
+            else {
+                const data = {
+                    jsonStr: jsonString
+                }
+                AjaxCall("/DepartmentArea/Department/SaveChanges", "POST", data, function (res) {
+                    if (res.Status) {
+                        reloadTree();
+                        NotiSuccess("Thành công", res.Message);
+                    }
+                    else {
+                        NotiError("Lỗi xử lý", res.Message);
+                    }
+                });
+            }
+        }
+        // if had update, reload
+        function reloadTree() {
+            AjaxCall("/DepartmentArea/Department/ReloadTree", 'get', null, function (rs) {
+                if (rs.Status) {
+                    $("#rootTree").empty();
+                    $("#rootTree").html(generateTree(rs.Param));
+                }
+                else {
+                    NotiError("Lỗi xử lý", rs.Message);
+                }
+            });
+        }
+        // init
+        function pagefunction() {
+            $("#rootTree").html(generateTree(lstData));
+
+            let treeMenu = {};
+            treeMenu["add"] = {
+                name: "Thêm",
+                type: "",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    $itemElement.html('<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Thêm mới' + opt.selector);
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (key, opt) {
+                    var id = opt.$trigger[0].getAttribute("data-id");
+                    CreateAction("/DepartmentArea/Department/Create/" + id);
+                },
+            }
+            treeMenu["edit"] = {
+                name: "Sửa",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    $itemElement.html('<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp; Sửa' + opt.selector);
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (key, opt) {
+                    var id = opt.$trigger[0].getAttribute("data-id");
+                    EditAction("/DepartmentArea/Department/Edit/" + id);
+                },
+            };
+            treeMenu["delete"] = {
+                name: "Xóa",
+                icon: function (opt, $itemElement, itemKey, item) {
+                    $itemElement.html('<span style="color:red" class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp; Xóa' + opt.selector);
+                    return 'context-menu-icon-updated';
+                },
+                callback: function (key, opt) {
+                    var id = opt.$trigger[0].getAttribute("data-id");
+                    onDelete("/DepartmentArea/Department/Delete/" + id);
+                },
+            };
+
+            $.contextMenu({
+                selector: 'li.dd-item',
+                autoHide: true,
+                items: treeMenu
+            });
+        }
+
+        function AfterSussessActionAjaxform(){
+            reloadTree();
+        }
+
+        pagefunction();
+    </script>
+}
